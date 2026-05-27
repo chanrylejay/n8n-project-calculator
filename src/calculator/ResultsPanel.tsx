@@ -1,4 +1,4 @@
-import { Hammer, Calendar, Layers, Info, ExternalLink } from "lucide-react";
+import { Hammer, Calendar, Layers, Info, ExternalLink, TrendingUp } from "lucide-react";
 import { CalculationResult } from "./logic";
 import { AIEstimateResult } from "./DescribeProject";
 
@@ -18,21 +18,39 @@ function Card({
   title,
   children,
   accent,
+  type = "default",
 }: {
   icon: React.ElementType;
   title: string;
   children: React.ReactNode;
   accent?: boolean;
+  type?: "default" | "success" | "info" | "warning";
 }) {
+  const colorMap = {
+    default: "border-surface-border",
+    success: "border-success/30 bg-success/5",
+    info: "border-info/30 bg-info/5",
+    warning: "border-warning/30 bg-warning/5",
+  };
+
+  const iconColorMap = {
+    default: "bg-zinc-800 text-zinc-400",
+    success: "bg-success/15 text-success",
+    info: "bg-info/15 text-info",
+    warning: "bg-warning/15 text-warning",
+  };
+
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-surface-border bg-surface-card p-5 transition-all duration-300 hover:border-accent/20">
+    <div className={`group relative overflow-hidden rounded-xl border ${colorMap[type]} bg-surface-elevated p-6 transition-all duration-300 hover:border-accent/20 hover:shadow-glow-sm`}>
       <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.02] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <div className="relative space-y-3">
-        <div className="flex items-center gap-2.5">
-          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${accent ? "bg-accent/15 text-accent" : "bg-zinc-800 text-zinc-400"}`}>
-            <Icon className="h-4 w-4" />
+      <div className="relative space-y-4">
+        <div className="flex items-center gap-3">
+          <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+            accent ? iconColorMap[type] : iconColorMap.default
+          }`}>
+            <Icon className="h-5 w-5" />
           </div>
-          <h3 className="text-base font-semibold text-zinc-400 uppercase tracking-[0.05em]">{title}</h3>
+          <h3 className="text-sm font-bold text-zinc-50 uppercase tracking-[0.08em]">{title}</h3>
         </div>
         {children}
       </div>
@@ -40,11 +58,11 @@ function Card({
   );
 }
 
-function CostLine({ label, value }: { label: string; value: string }) {
+function CostLine({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="flex items-center justify-between text-sm">
-      <span className="text-zinc-500">{label}</span>
-      <span className="text-zinc-300">{value}</span>
+    <div className={`flex items-center justify-between text-sm ${highlight ? "py-1" : ""}`}>
+      <span className={highlight ? "font-medium text-zinc-200" : "text-zinc-500"}>{label}</span>
+      <span className={highlight ? "font-semibold text-zinc-50" : "text-zinc-300"}>{value}</span>
     </div>
   );
 }
@@ -57,37 +75,30 @@ function formatMoney(n: number): string {
 
 function ResultsCTA() {
   return (
-    <div className="pt-6 text-center space-y-2">
-      <div className="h-px bg-surface-border" />
-      <p className="text-sm text-zinc-400 pt-3">Need help building this?</p>
-      <p className="text-sm">
+    <div className="rounded-xl border border-surface-border bg-surface-elevated p-6 text-center space-y-4">
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-zinc-300">Ready to build it?</p>
+        <p className="text-xs text-zinc-500">Let's discuss your project and get started.</p>
+      </div>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <a
           href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-accent hover:underline"
+          className="btn-primary text-sm"
         >
+          <ExternalLink className="h-4 w-4" />
           Hire me on Upwork
         </a>
-        <span className="text-zinc-600 mx-2">&middot;</span>
         <a
           href="https://linkedin.com/in/chanrylejay"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-accent hover:underline"
+          className="btn-secondary"
         >
           Connect on LinkedIn
         </a>
-        <span className="text-zinc-600 mx-2">&middot;</span>
-        <a
-          href="https://chanryle-cagara.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent hover:underline"
-        >
-          See my portfolio
-        </a>
-      </p>
+      </div>
     </div>
   );
 }
@@ -100,22 +111,23 @@ interface ResultsPanelProps {
 export default function ResultsPanel({ result, error }: ResultsPanelProps) {
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-accent/20 bg-surface-card py-10 text-center px-4 animate-fadeIn">
-        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
-          <Info className="h-5 w-5 text-accent" />
+      <div className="flex flex-col items-center justify-center rounded-xl border border-warning/40 bg-warning/5 py-12 text-center px-6 animate-fadeIn">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-warning/15">
+          <Info className="h-6 w-6 text-warning" />
         </div>
-        <p className="text-sm text-zinc-400 max-w-md">{error}</p>
+        <p className="text-sm text-zinc-300 max-w-md font-medium">{error}</p>
       </div>
     );
   }
 
   if (!result) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-surface-border bg-surface-card py-16 text-center">
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-card">
-          <Layers className="h-5 w-5 text-zinc-600" />
+      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-surface-border bg-surface-elevated py-20 text-center px-6">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-zinc-800/50">
+          <Layers className="h-6 w-6 text-zinc-600" />
         </div>
-        <p className="text-sm text-zinc-500">Select options above to see your estimate</p>
+        <p className="text-sm font-medium text-zinc-400">Select options above to see your estimate</p>
+        <p className="text-xs text-zinc-600 mt-2">Answer at least the automation type to get started</p>
       </div>
     );
   }
@@ -130,112 +142,117 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
     <div className="space-y-6 animate-fadeIn">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card 1: Build Cost */}
-        <Card icon={Hammer} title="Build Cost" accent>
-          <div className="space-y-3">
-            <div className="text-[32px] font-bold text-zinc-50 tracking-tight">
-              {r.buildMin === r.buildMax
-                ? `${formatMoney(r.buildMin)}`
-                : `${formatMoney(r.buildMin)} — ${formatMoney(r.buildMax)}`}
-              <span className="ml-1 text-sm font-normal text-zinc-500">flat rate</span>
+        <Card icon={Hammer} title="Build Cost" accent type="success">
+          <div className="space-y-4">
+            <div>
+              <div className="text-sm text-zinc-500 mb-1">Estimated Cost</div>
+              <div className="text-[36px] font-bold text-success tracking-tight">
+                {r.buildMin === r.buildMax
+                  ? `${formatMoney(r.buildMin)}`
+                  : `${formatMoney(r.buildMin)}–${formatMoney(r.buildMax)}`}
+              </div>
+              <div className="text-xs text-zinc-500 mt-1">flat rate</div>
             </div>
+            
             {r.addOnBreakdown.length > 0 && (
-              <div className="space-y-1 text-xs text-zinc-500">
-                <div className="text-zinc-400 font-medium text-[11px] uppercase tracking-wider mb-1">Add-ons included</div>
+              <div className="space-y-2 pt-2 border-t border-surface-border/50">
+                <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Add-ons Included</div>
                 {r.addOnBreakdown.map((a, i) => (
-                  <div key={i} className="flex justify-between">
-                    <span>{a.label}</span>
-                    <span>+${a.cost}</span>
+                  <div key={i} className="flex justify-between text-xs">
+                    <span className="text-zinc-500">{a.label}</span>
+                    <span className="text-zinc-300 font-medium">+${a.cost}</span>
                   </div>
                 ))}
               </div>
             )}
-            <div className="h-px bg-surface-border" />
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-500">Estimated delivery</span>
-              <span className="text-zinc-300">
-                {r.deliveryMin === r.deliveryMax
-                  ? `${r.deliveryMin} day${r.deliveryMin !== 1 ? "s" : ""}`
-                  : `${r.deliveryMin}–${r.deliveryMax} days`}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-500">Complexity</span>
-              <span className="inline-flex items-center rounded-full bg-accent/15 px-2.5 py-0.5 text-xs font-semibold text-accent">
-                Tier {r.tier}
-              </span>
+            
+            <div className="space-y-2 pt-2 border-t border-surface-border/50">
+              <CostLine label="Delivery timeframe" value={`${r.deliveryMin}–${r.deliveryMax} days`} />
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-zinc-500">Complexity</span>
+                <span className="inline-flex items-center rounded-full bg-info/20 px-3 py-1 text-xs font-bold text-info">
+                  TIER {r.tier}
+                </span>
+              </div>
             </div>
           </div>
         </Card>
 
         {/* Card 2: Monthly Running Cost */}
-        <Card icon={Calendar} title="Monthly Running Cost" accent>
-          <div className="space-y-3">
+        <Card icon={Calendar} title="Monthly Cost" accent type="warning">
+          <div className="space-y-4">
             <div className="space-y-2">
               <CostLine label={r.hostingLabel} value={`${formatMoney(r.hostingCost)}/mo`} />
-              <CostLine label={r.aiModelName} value={`${formatMoney(r.aiCost)}/mo`} />
-              <CostLine label={r.databaseLabel} value={`${formatMoney(r.databaseCost)}/mo`} />
-              <CostLine label={r.notificationLabel} value={`${formatMoney(r.notificationCost)}/mo`} />
-              {r.toolsBreakdown.map((t, i) => (
-                <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} />
-              ))}
+              {r.aiCost > 0 && <CostLine label={r.aiModelName} value={`${formatMoney(r.aiCost)}/mo`} />}
+              {r.databaseCost > 0 && <CostLine label={r.databaseLabel} value={`${formatMoney(r.databaseCost)}/mo`} />}
+              {r.notificationCost > 0 && <CostLine label={r.notificationLabel} value={`${formatMoney(r.notificationCost)}/mo`} />}
+              {r.toolsBreakdown.map((t, i) => 
+                t.cost > 0 && <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} />
+              )}
             </div>
+            
             {r.hostingNote && (
-              <p className="text-xs text-accent/70 italic">{r.hostingNote}</p>
+              <div className="pt-2 border-t border-surface-border/50">
+                <p className="text-xs text-info italic">{r.hostingNote}</p>
+              </div>
             )}
-            <div className="h-px bg-surface-border" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-zinc-300">Total</span>
-              <span className="text-[32px] font-bold text-green-500">
-                {formatMoney(r.totalMonthly)}
-                <span className="text-sm font-normal text-zinc-500">/mo</span>
-              </span>
+            
+            <div className="pt-3 border-t border-surface-border/50">
+              <CostLine 
+                label="Total Monthly" 
+                value={`${formatMoney(r.totalMonthly)}/mo`}
+                highlight
+              />
             </div>
           </div>
         </Card>
       </div>
 
       {/* Card 3: Suggested Architecture — full width */}
-      <Card icon={Layers} title="Suggested Architecture">
-        <div className="space-y-2">
-          <CostLine
-            label="Workflows needed"
-            value={
-              r.workflowsMin === r.workflowsMax
-                ? `${r.workflowsMin}`
-                : `${r.workflowsMin}–${r.workflowsMax}`
-            }
-          />
-          <CostLine
-            label="Estimated nodes"
-            value={`${r.nodesMin}–${r.nodesMax}`}
-          />
-          <CostLine
-            label="AI model"
-            value={r.aiModelName === "None" ? "None" : r.aiModelName}
-          />
-          <CostLine
-            label="Executions/month"
-            value={
-              typeof r.executionsPerMonth === "number"
-                ? r.executionsPerMonth.toLocaleString()
-                : r.executionsPerMonth
-            }
-          />
+      <Card icon={Layers} title="Suggested Architecture" type="info">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Workflows</div>
+              <div className="text-2xl font-bold text-info">
+                {r.workflowsMin === r.workflowsMax
+                  ? r.workflowsMin
+                  : `${r.workflowsMin}–${r.workflowsMax}`}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Nodes</div>
+              <div className="text-2xl font-bold text-info">{r.nodesMin}–{r.nodesMax}</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Executions</div>
+              <div className="text-base font-semibold text-info">
+                {typeof r.executionsPerMonth === "number"
+                  ? r.executionsPerMonth.toLocaleString()
+                  : r.executionsPerMonth}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">AI Model</div>
+              <div className="text-sm font-semibold text-info truncate">{r.aiModelName !== "None" ? r.aiModelName : "—"}</div>
+            </div>
+          </div>
+
           {(r.aiModelName !== "None" || r.databaseLabel || r.notificationLabel || r.toolsBreakdown.length > 0) && (
-            <div className="pt-1">
-              <p className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1.5">Key integrations</p>
-              <div className="flex flex-wrap gap-1.5">
+            <div className="pt-2 border-t border-surface-border/50">
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Key Integrations</p>
+              <div className="flex flex-wrap gap-2">
                 {r.aiModelName !== "None" && (
-                  <span className="rounded-md bg-zinc-800/60 border border-surface-border px-2 py-0.5 text-[11px] text-zinc-400">{r.aiModelName}</span>
+                  <span className="rounded-md bg-accent/10 border border-accent/30 px-2.5 py-1 text-xs font-medium text-accent">{r.aiModelName}</span>
                 )}
                 {r.databaseLabel && r.databaseCost >= 0 && (
-                  <span className="rounded-md bg-zinc-800/60 border border-surface-border px-2 py-0.5 text-[11px] text-zinc-400">{r.databaseLabel}</span>
+                  <span className="rounded-md bg-info/10 border border-info/30 px-2.5 py-1 text-xs font-medium text-info">{r.databaseLabel}</span>
                 )}
                 {r.notificationLabel && (
-                  <span className="rounded-md bg-zinc-800/60 border border-surface-border px-2 py-0.5 text-[11px] text-zinc-400">{r.notificationLabel}</span>
+                  <span className="rounded-md bg-success/10 border border-success/30 px-2.5 py-1 text-xs font-medium text-success">{r.notificationLabel}</span>
                 )}
                 {r.toolsBreakdown.map((t, i) => (
-                  <span key={i} className="rounded-md bg-zinc-800/60 border border-surface-border px-2 py-0.5 text-[11px] text-zinc-400">{t.label}</span>
+                  <span key={i} className="rounded-md bg-zinc-800/50 border border-surface-border px-2.5 py-1 text-xs font-medium text-zinc-400">{t.label}</span>
                 ))}
               </div>
             </div>
@@ -255,33 +272,29 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
     <div className="space-y-6 animate-fadeIn">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card 1: Build Cost */}
-        <Card icon={Hammer} title="Build Cost" accent>
-          <div className="space-y-3">
-            <div className="text-[32px] font-bold text-zinc-50 tracking-tight">
-              {d.build_cost_min === d.build_cost_max
-                ? `${formatMoney(d.build_cost_min)}`
-                : `${formatMoney(d.build_cost_min)} — ${formatMoney(d.build_cost_max)}`}
-              <span className="ml-1 text-sm font-normal text-zinc-500">flat rate</span>
+        <Card icon={Hammer} title="Build Cost" accent type="success">
+          <div className="space-y-4">
+            <div>
+              <div className="text-sm text-zinc-500 mb-1">Estimated Cost</div>
+              <div className="text-[36px] font-bold text-success tracking-tight">
+                {d.build_cost_min === d.build_cost_max
+                  ? `${formatMoney(d.build_cost_min)}`
+                  : `${formatMoney(d.build_cost_min)}–${formatMoney(d.build_cost_max)}`}
+              </div>
             </div>
-            <div className="h-px bg-surface-border" />
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-500">Estimated delivery</span>
-              <span className="text-zinc-300">
-                {d.delivery_days_min === d.delivery_days_max
-                  ? `${d.delivery_days_min} day${d.delivery_days_min !== 1 ? "s" : ""}`
-                  : `${d.delivery_days_min}–${d.delivery_days_max} days`}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-500">Complexity</span>
-              <span className="inline-flex items-center rounded-full bg-accent/15 px-2.5 py-0.5 text-xs font-semibold text-accent">
-                Tier {d.complexity_tier}
-              </span>
+            <div className="space-y-2 pt-3 border-t border-surface-border/50">
+              <CostLine label="Delivery timeframe" value={`${d.delivery_days_min}–${d.delivery_days_max} days`} />
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-zinc-500">Complexity</span>
+                <span className="inline-flex items-center rounded-full bg-info/20 px-3 py-1 text-xs font-bold text-info">
+                  TIER {d.complexity_tier}
+                </span>
+              </div>
             </div>
             {d.key_integrations.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-1">
+              <div className="flex flex-wrap gap-1.5 pt-2">
                 {d.key_integrations.map((app, i) => (
-                  <span key={i} className="rounded-md bg-zinc-800/60 border border-surface-border px-2 py-0.5 text-[11px] text-zinc-400">
+                  <span key={i} className="rounded-md bg-zinc-800/50 border border-surface-border px-2 py-0.5 text-xs font-medium text-zinc-400">
                     {app}
                   </span>
                 ))}
@@ -291,43 +304,54 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
         </Card>
 
         {/* Card 2: Monthly Running Cost */}
-        <Card icon={Calendar} title="Monthly Running Cost" accent>
-          <div className="space-y-3">
+        <Card icon={Calendar} title="Monthly Cost" accent type="warning">
+          <div className="space-y-4">
             <div className="space-y-2">
               <CostLine label="Hosting" value={`${formatMoney(d.monthly_hosting_cost)}/mo`} />
               <CostLine label="AI API" value={`${formatMoney(d.monthly_ai_cost)}/mo`} />
               <CostLine label="Database" value={`${formatMoney(d.monthly_db_cost)}/mo`} />
               <CostLine label="Tools & Services" value={`${formatMoney(d.monthly_tools_cost)}/mo`} />
             </div>
-            <div className="h-px bg-surface-border" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-zinc-300">Total</span>
-              <span className="text-[32px] font-bold text-green-500">
-                {formatMoney(d.monthly_total)}
-                <span className="text-sm font-normal text-zinc-500">/mo</span>
-              </span>
+            <div className="pt-3 border-t border-surface-border/50">
+              <CostLine 
+                label="Total Monthly" 
+                value={`${formatMoney(d.monthly_total)}/mo`}
+                highlight
+              />
             </div>
           </div>
         </Card>
       </div>
 
       {/* Card 3: Suggested Architecture — full width */}
-      <Card icon={Layers} title="Suggested Architecture">
-        <div className="space-y-2">
-          <CostLine label="Workflows needed" value={`${d.workflows_needed}`} />
-          <CostLine label="Estimated nodes" value={`${d.estimated_nodes_min}–${d.estimated_nodes_max}`} />
-          <CostLine label="AI model" value={d.ai_model_recommended ?? "None"} />
+      <Card icon={Layers} title="Suggested Architecture" type="info">
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Workflows</div>
+              <div className="text-2xl font-bold text-info">{d.workflows_needed}</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Nodes</div>
+              <div className="text-2xl font-bold text-info">{d.estimated_nodes_min}–{d.estimated_nodes_max}</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">AI Model</div>
+              <div className="text-sm font-semibold text-info truncate">{d.ai_model_recommended ?? "None"}</div>
+            </div>
+          </div>
+
           {d.architecture_summary && (
-            <div className="pt-1">
-              <p className="text-xs text-zinc-500 leading-relaxed">{d.architecture_summary}</p>
+            <div className="pt-3 border-t border-surface-border/50">
+              <p className="text-sm text-zinc-400 leading-relaxed">{d.architecture_summary}</p>
             </div>
           )}
         </div>
       </Card>
 
       {d.notes && (
-        <div className="rounded-lg border border-surface-border bg-surface-card px-4 py-3">
-          <p className="text-xs text-zinc-500 italic leading-relaxed">{d.notes}</p>
+        <div className="rounded-lg border border-info/30 bg-info/5 px-5 py-4">
+          <p className="text-sm text-zinc-400 italic leading-relaxed">{d.notes}</p>
         </div>
       )}
 

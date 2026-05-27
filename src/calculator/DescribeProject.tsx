@@ -114,25 +114,31 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
+      <div className="space-y-3">
+        <label className="block text-sm font-semibold text-zinc-50">Describe Your Project</label>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={isLoading}
-          rows={5}
+          rows={6}
           placeholder="Example: I want to automatically capture leads from my website form, save them to a Google Sheet, and send me a Telegram notification when a new lead comes in."
-          className="w-full resize-none rounded-lg border border-surface-border bg-[#0f0f11] px-4 py-3 text-[15px] text-zinc-200 placeholder-zinc-600 transition-colors hover:border-accent/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50"
+          className="form-input resize-none min-h-[140px] disabled:opacity-60 disabled:cursor-not-allowed"
         />
-        <p className="text-xs text-zinc-500">
-          Powered by AI — {Math.max(0, remaining)} free estimate{remaining !== 1 ? "s" : ""} remaining today
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-zinc-500">
+            Powered by AI — <span className="text-accent font-semibold">{Math.max(0, remaining)}</span> free estimate{remaining !== 1 ? "s" : ""} remaining today
+          </p>
+          {remaining === 0 && (
+            <p className="text-xs text-warning font-medium">Limit reached — try Quick Estimate or come back tomorrow</p>
+          )}
+        </div>
       </div>
 
       <button
         type="button"
         onClick={handleSubmit}
-        disabled={isLoading || rateLimited}
-        className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        disabled={isLoading || rateLimited || !text.trim()}
+        className="btn-primary w-full"
       >
         {isLoading ? (
           <>
@@ -140,12 +146,12 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            Analyzing your project...
+            <span>Analyzing your project...</span>
           </>
         ) : (
           <>
-            <Sparkles className="h-4 w-4" />
-            Get My Estimate
+            <Sparkles className="h-5 w-5" />
+            <span>Get AI Estimate</span>
           </>
         )}
       </button>

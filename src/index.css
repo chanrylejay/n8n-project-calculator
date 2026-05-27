@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,10 +8,19 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #09090B;
+  background: linear-gradient(135deg, #09090B 0%, #12121A 100%);
+  min-height: 100vh;
 }
 
 /* Custom select styling */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2371717a' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.2em 1.2em;
+  padding-right: 2.3rem;
+}
+
 select option {
   background: #18181B;
   color: #FAFAFA;
@@ -19,17 +28,22 @@ select option {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #09090B;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #27272A;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
+  border-radius: 4px;
+  border: 2px solid #09090B;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
 }
 
 /* Number input — hide spinners */
@@ -38,6 +52,31 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+/* Focus ring for better accessibility */
+@layer components {
+  .focus-ring {
+    @apply transition-all duration-200;
+  }
+
+  .focus-ring:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-surface;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-surface-border bg-surface-elevated px-4 py-2.5 text-[15px] text-zinc-100 placeholder-zinc-600 transition-all duration-200 hover:border-accent/40 focus:border-accent focus:ring-1 focus:ring-accent/40;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-accent to-accent-hover px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/30 transition-all duration-200 hover:shadow-glow hover:scale-105 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-surface-border bg-surface-card px-4 py-2.5 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-accent/30 hover:text-accent hover:bg-surface-elevated;
+  }
+}
+
