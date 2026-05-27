@@ -37,13 +37,13 @@ function SelectField({
   note?: string;
 }) {
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-300">{label}</label>
+    <div className="space-y-2.5">
+      <label className="block text-sm font-semibold text-zinc-300">{label}</label>
       <div className="relative">
         <select
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
-          className="w-full appearance-none rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-3 pr-10 text-sm text-gray-200 transition-colors hover:border-[#FF6D5A]/40 focus:border-[#FF6D5A] focus:outline-none focus:ring-1 focus:ring-[#FF6D5A]/30"
+          className="w-full appearance-none rounded-lg border border-surface-border bg-[#0f0f11] px-4 py-3 pr-10 text-[15px] text-zinc-200 transition-colors hover:border-accent/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
         >
           <option value="">Select...</option>
           {options.map((opt, i) => (
@@ -52,9 +52,9 @@ function SelectField({
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
       </div>
-      {note && <p className="text-xs text-[#FF6D5A]/80 italic">{note}</p>}
+      {note && <p className="text-xs text-accent/80 italic">{note}</p>}
     </div>
   );
 }
@@ -75,7 +75,7 @@ function CustomFields({
         value={custom.name}
         onChange={(e) => onCustomChange({ ...custom, name: e.target.value })}
         placeholder={namePlaceholder}
-        className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 transition-colors hover:border-[#FF6D5A]/40 focus:border-[#FF6D5A] focus:outline-none focus:ring-1 focus:ring-[#FF6D5A]/30"
+        className="w-full rounded-lg border border-surface-border bg-[#0f0f11] px-3 py-2.5 text-[15px] text-zinc-200 placeholder-zinc-600 transition-colors hover:border-accent/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
       />
       <input
         type="number"
@@ -84,7 +84,7 @@ function CustomFields({
         placeholder="0.00"
         min="0"
         step="0.01"
-        className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 transition-colors hover:border-[#FF6D5A]/40 focus:border-[#FF6D5A] focus:outline-none focus:ring-1 focus:ring-[#FF6D5A]/30"
+        className="w-full rounded-lg border border-surface-border bg-[#0f0f11] px-3 py-2.5 text-[15px] text-zinc-200 placeholder-zinc-600 transition-colors hover:border-accent/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
       />
     </div>
   );
@@ -95,44 +95,52 @@ function CheckboxGroup({
   options,
   selected,
   onToggle,
+  costSuffix,
 }: {
   label: string;
   options: { label: string; cost?: number }[];
   selected: number[];
   onToggle: (idx: number) => void;
+  costSuffix?: boolean;
 }) {
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-300">{label}</label>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {options.map((opt, i) => {
-          const isSelected = selected.includes(i);
-          return (
-            <button
-              key={i}
-              type="button"
-              onClick={() => onToggle(i)}
-              className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-left text-sm transition-all ${
-                isSelected
-                  ? "border-[#FF6D5A] bg-[#FF6D5A]/10 text-[#FF6D5A]"
-                  : "border-[#2a2a2a] bg-[#1a1a1a] text-gray-400 hover:border-[#FF6D5A]/30"
-              }`}
-            >
-              <span
-                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
-                  isSelected ? "border-[#FF6D5A] bg-[#FF6D5A]" : "border-gray-600"
+    <div className="space-y-2.5">
+      <label className="block text-sm font-semibold text-zinc-300">{label}</label>
+      <div className="rounded-lg border border-surface-border bg-[#0f0f11] divide-y divide-surface-border overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2">
+          {options.map((opt, i) => {
+            const isSelected = selected.includes(i);
+            const col = i % 2 === 0 ? "sm:border-r" : "";
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => onToggle(i)}
+                className={`flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors ${col} ${
+                  isSelected
+                    ? "bg-accent/10 text-accent"
+                    : "text-zinc-400 hover:bg-zinc-800/50"
                 }`}
               >
-                {isSelected && (
-                  <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
-                    <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                <span
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                    isSelected ? "border-accent bg-accent" : "border-zinc-600"
+                  }`}
+                >
+                  {isSelected && (
+                    <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </span>
+                <span className="flex-1">{opt.label}</span>
+                {costSuffix && opt.cost !== undefined && opt.cost > 0 && (
+                  <span className="text-zinc-500 text-xs">+${opt.cost}/mo</span>
                 )}
-              </span>
-              <span>{opt.label}</span>
-            </button>
-          );
-        })}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -171,14 +179,14 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
   const showOtherAI = formState.aiProvider !== null && isOtherOption(AI_PROVIDER_OPTIONS[formState.aiProvider].costs.low);
   const showOtherDatabase = formState.database !== null && isOtherOption(DATABASE_OPTIONS[formState.database].cost);
   const showOtherNotification = formState.notification !== null && isOtherOption(NOTIFICATION_OPTIONS[formState.notification].cost);
-  const showOtherTool = formState.tools.includes(7); // index of "Other tool (custom)"
+  const showOtherTool = formState.tools.includes(7);
 
   const handleReset = useCallback(() => {
     onChange(initialFormState);
   }, [onChange]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-7">
       <SelectField
         label='1. "What are you automating?"'
         value={formState.automation}
@@ -206,7 +214,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
       />
 
       {showAIProvider && (
-        <div className="animate-fadeIn space-y-2">
+        <div className="animate-fadeIn space-y-2.5">
           <SelectField
             label="6. Which AI provider?"
             value={formState.aiProvider}
@@ -223,7 +231,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
         </div>
       )}
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <SelectField
           label="4. Where will n8n run?"
           value={formState.hosting}
@@ -247,7 +255,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
         onChange={(v) => set("frequency", v)}
       />
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <SelectField
           label="7. Database needed?"
           value={formState.database}
@@ -263,7 +271,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
         )}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <SelectField
           label="8. Notification channel?"
           value={formState.notification}
@@ -279,12 +287,13 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
         )}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <CheckboxGroup
           label="9. Other tools?"
-          options={TOOL_OPTIONS.map((t) => ({ label: t.label + (t.cost > 0 ? ` (+$${t.cost}/mo)` : ""), cost: t.cost }))}
+          options={TOOL_OPTIONS.map((t) => ({ label: t.label, cost: t.cost > 0 ? t.cost : undefined }))}
           selected={formState.tools}
           onToggle={(i) => toggleArrayItem("tools", i)}
+          costSuffix
         />
         {showOtherTool && (
           <CustomFields
@@ -297,17 +306,18 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
 
       <CheckboxGroup
         label="10. Add-ons?"
-        options={ADDON_OPTIONS.map((a) => ({ label: `${a.label} (+$${a.buildCost})` }))}
+        options={ADDON_OPTIONS.map((a) => ({ label: a.label, cost: a.buildCost }))}
         selected={formState.addons}
         onToggle={(i) => toggleArrayItem("addons", i)}
+        costSuffix
       />
 
-      <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-2 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-2.5 text-sm text-gray-400 transition-colors hover:border-[#FF6D5A]/30 hover:text-[#FF6D5A]"
+            className="inline-flex items-center gap-2 rounded-lg border border-surface-border bg-[#0f0f11] px-4 py-2.5 text-sm text-zinc-400 transition-colors hover:border-accent/30 hover:text-accent"
           >
             <RotateCcw className="h-4 w-4" />
             Reset
@@ -315,13 +325,13 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
           <button
             type="button"
             onClick={onShare}
-            className="inline-flex items-center gap-2 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-2.5 text-sm text-gray-400 transition-colors hover:border-[#FF6D5A]/30 hover:text-[#FF6D5A]"
+            className="inline-flex items-center gap-2 rounded-lg border border-surface-border bg-[#0f0f11] px-4 py-2.5 text-sm text-zinc-400 transition-colors hover:border-accent/30 hover:text-accent"
           >
             <Share2 className="h-4 w-4" />
             Share
           </button>
         </div>
-        <p className="text-xs text-gray-600">
+        <p className="text-xs text-zinc-500">
           Using tools not listed here?{" "}
           <button
             type="button"
@@ -331,7 +341,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
               const event = new CustomEvent("switchTab", { detail: "describe" });
               window.dispatchEvent(event);
             }}
-            className="text-[#FF6D5A]/60 hover:text-[#FF6D5A] underline underline-offset-2 transition-colors"
+            className="text-accent/70 hover:text-accent underline underline-offset-2 transition-colors"
           >
             Try the Describe Your Project tab
           </button>

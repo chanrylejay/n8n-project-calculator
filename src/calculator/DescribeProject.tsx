@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Sparkles, AlertCircle } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export interface AIEstimateResult {
   complexity_tier: number;
@@ -27,6 +27,7 @@ interface DescribeProjectProps {
   onError: (message: string) => void;
   isLoading: boolean;
   setIsLoading: (v: boolean) => void;
+  onScrollToResults: () => void;
 }
 
 const RATE_LIMIT_KEY = "n8n_calc_rate";
@@ -57,41 +58,7 @@ function incrementUsage(): number {
   return next;
 }
 
-const SYSTEM_PROMPT = `You are an n8n automation cost estimator. The user will describe a project they want automated using n8n. Analyze their description and return ONLY a valid JSON object with these exact fields:
-
-{
-  "complexity_tier": 1 or 2 or 3,
-  "build_cost_min": number,
-  "build_cost_max": number,
-  "delivery_days_min": number,
-  "delivery_days_max": number,
-  "workflows_needed": number,
-  "estimated_nodes_min": number,
-  "estimated_nodes_max": number,
-  "needs_ai": true or false,
-  "ai_model_recommended": "string or null",
-  "monthly_hosting_cost": number,
-  "monthly_ai_cost": number,
-  "monthly_db_cost": number,
-  "monthly_tools_cost": number,
-  "monthly_total": number,
-  "key_integrations": ["list of app/service names"],
-  "architecture_summary": "1-2 sentence description of the suggested setup",
-  "notes": "any important caveats or assumptions"
-}
-
-Pricing rules:
-- Tier 1 (simple, 1-2 apps, no AI): build cost $15-20, delivery 1-2 days, 1 workflow, 5-15 nodes
-- Tier 2 (medium, 3-4 apps or basic AI): build cost $50, delivery 2-4 days, 1-2 workflows, 15-30 nodes
-- Tier 3 (complex, 5+ apps or advanced AI or multi-step): build cost $100-250, delivery 4-7 days, 2-4 workflows, 25-60 nodes
-
-For hosting, recommend self-hosted Hetzner CX23 at $4.50/mo as default unless the project clearly needs more resources.
-For AI, default to DeepSeek V4 Flash at $0.50-2/mo for light use unless the task requires reasoning.
-For database, default to Neon PostgreSQL free tier at $0/mo unless the project needs more storage.
-
-Return ONLY the JSON object. No markdown, no explanation, no code fences.`;
-
-export default function DescribeProject({ onResult, onError, isLoading, setIsLoading }: DescribeProjectProps) {
+export default function DescribeProject({ onResult, onError, isLoading, setIsLoading, onScrollToResults }: DescribeProjectProps) {
   const [text, setText] = useState("");
   const [rateLimited, setRateLimited] = useState(false);
 
@@ -114,20 +81,18 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
     onError("");
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-      const res = await fetch(`${supabaseUrl}/functions/v1/estimate`, {
+      const res = await fetch("/api/estimate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${supabaseAnonKey}`,
         },
-        body: JSON.stringify({ description: text.trim(), systemPrompt: SYSTEM_PROMPT }),
+        body: JSON.stringify({ description: text.trim() }),
       });
 
       if (!res.ok) {
-        throw new Error(`API returned ${res.status}`);
+        const errData = await res.json().catch(() => null);
+        const msg = errData?.error || `API returned ${res.status}`;
+        throw new Error(msg);
       }
 
       const raw = await res.json();
@@ -139,12 +104,13 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
 
       incrementUsage();
       onResult(parsed);
+      onScrollToResults();
     } catch {
       onError("Something went wrong. Try the Quick Estimate tab for instant results, or try again later.");
     } finally {
       setIsLoading(false);
     }
-  }, [text, onResult, onError, setIsLoading]);
+  }, [text, onResult, onError, setIsLoading, onScrollToResults]);
 
   return (
     <div className="space-y-4">
@@ -155,9 +121,9 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
           disabled={isLoading}
           rows={5}
           placeholder="Example: I want to automatically capture leads from my website form, save them to a Google Sheet, and send me a Telegram notification when a new lead comes in."
-          className="w-full resize-none rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-3 text-sm text-gray-200 placeholder-gray-600 transition-colors hover:border-[#FF6D5A]/40 focus:border-[#FF6D5A] focus:outline-none focus:ring-1 focus:ring-[#FF6D5A]/30 disabled:opacity-50"
+          className="w-full resize-none rounded-lg border border-surface-border bg-[#0f0f11] px-4 py-3 text-[15px] text-zinc-200 placeholder-zinc-600 transition-colors hover:border-accent/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50"
         />
-        <p className="text-xs text-gray-600">
+        <p className="text-xs text-zinc-500">
           Powered by AI — {Math.max(0, remaining)} free estimate{remaining !== 1 ? "s" : ""} remaining today
         </p>
       </div>
@@ -166,7 +132,7 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
         type="button"
         onClick={handleSubmit}
         disabled={isLoading || rateLimited}
-        className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FF6D5A] px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-[#ff5a45] hover:shadow-lg hover:shadow-[#FF6D5A]/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
       >
         {isLoading ? (
           <>

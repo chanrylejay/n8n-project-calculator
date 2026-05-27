@@ -8,12 +8,13 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #09090B;
 }
 
 /* Custom select styling */
 select option {
-  background: #1a1a1a;
-  color: #e5e7eb;
+  background: #18181B;
+  color: #FAFAFA;
 }
 
 /* Scrollbar */
@@ -21,12 +22,22 @@ select option {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0D0D0D;
+  background: #09090B;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #27272A;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: #3f3f46;
+}
+
+/* Number input — hide spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
 }

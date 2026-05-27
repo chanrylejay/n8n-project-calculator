@@ -16,7 +16,6 @@ function App() {
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const resultsRef = useRef<HTMLDivElement>(null);
-  const prevHadResult = useRef(false);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -32,18 +31,6 @@ function App() {
   const resultSource: ResultSource = activeTab === "quick"
     ? quickResult
     : aiResult ? { source: "ai", data: aiResult } : null;
-
-  const hasResult = resultSource !== null;
-
-  // Smooth scroll to results when they first appear
-  useEffect(() => {
-    if (hasResult && !prevHadResult.current && resultsRef.current) {
-      setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
-    }
-    prevHadResult.current = hasResult;
-  }, [hasResult]);
 
   const handleFormChange = useCallback((state: FormState) => {
     setFormState(state);
@@ -70,29 +57,34 @@ function App() {
   }, []);
 
   const handleShare = useCallback(async () => {
-    const url = window.location.href;
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(window.location.href);
       showToast("Link copied! Share it with your team.");
     } catch {
       showToast("Could not copy link — try manually.");
     }
   }, [showToast]);
 
+  const handleAIScroll = useCallback(() => {
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-gray-100">
+    <div className="min-h-screen bg-surface text-zinc-50">
       {/* Header */}
-      <header className="border-b border-[#1a1a1a] bg-[#0D0D0D]/80 backdrop-blur-md sticky top-0 z-10">
+      <header className="border-b border-surface-border bg-surface/80 backdrop-blur-md sticky top-0 z-10">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-6 sm:py-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FF6D5A]">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
               <Briefcase className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-[28px] font-bold text-zinc-50 tracking-tight">
               n8n Project Calculator
             </h1>
           </div>
-          <p className="text-sm text-gray-500 ml-12">
+          <p className="text-base text-zinc-400 ml-[52px]">
             Estimate your n8n automation build cost in 30 seconds.
           </p>
         </div>
@@ -101,18 +93,18 @@ function App() {
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* Info section */}
-        <p className="text-sm text-gray-500 text-center leading-relaxed max-w-xl mx-auto">
+        <p className="text-sm text-zinc-400 text-center leading-relaxed max-w-xl mx-auto">
           Whether you're a business owner exploring automation or a freelancer scoping a client project — get a realistic cost breakdown in seconds. No signup required.
         </p>
 
         {/* Tabs */}
-        <div className="flex gap-1 rounded-lg bg-[#141414] p-1 border border-[#1a1a1a]">
+        <div className="flex gap-1 rounded-lg bg-surface-card p-1 border border-surface-border">
           <button
             onClick={() => handleTabChange("quick")}
             className={`flex-1 rounded-md px-4 py-2.5 text-sm font-medium transition-all ${
               activeTab === "quick"
-                ? "bg-[#FF6D5A] text-white shadow-lg shadow-[#FF6D5A]/20"
-                : "text-gray-500 hover:text-gray-300"
+                ? "bg-accent text-white shadow-lg shadow-accent/20"
+                : "text-zinc-400 hover:text-zinc-300"
             }`}
           >
             Quick Estimate
@@ -122,8 +114,8 @@ function App() {
             onClick={() => handleTabChange("describe")}
             className={`flex-1 rounded-md px-4 py-2.5 text-sm font-medium transition-all ${
               activeTab === "describe"
-                ? "bg-[#FF6D5A] text-white shadow-lg shadow-[#FF6D5A]/20"
-                : "text-gray-500 hover:text-gray-300"
+                ? "bg-accent text-white shadow-lg shadow-accent/20"
+                : "text-zinc-400 hover:text-zinc-300"
             }`}
           >
             Describe Your Project
@@ -133,7 +125,7 @@ function App() {
         {/* Tab content */}
         {activeTab === "quick" ? (
           <div className="space-y-8">
-            <div className="rounded-xl border border-[#1a1a1a] bg-[#141414] p-5 sm:p-6">
+            <div className="rounded-xl border border-surface-border bg-surface-card p-5 sm:p-6">
               <QuickEstimate formState={formState} onChange={handleFormChange} onShare={handleShare} />
             </div>
             <div ref={resultsRef}>
@@ -142,12 +134,13 @@ function App() {
           </div>
         ) : (
           <div className="space-y-8">
-            <div className="rounded-xl border border-[#1a1a1a] bg-[#141414] p-5 sm:p-6">
+            <div className="rounded-xl border border-surface-border bg-surface-card p-5 sm:p-6">
               <DescribeProject
                 onResult={handleAIResult}
                 onError={handleAIError}
                 isLoading={aiLoading}
                 setIsLoading={setAiLoading}
+                onScrollToResults={handleAIScroll}
               />
             </div>
             <div ref={resultsRef}>
@@ -158,18 +151,18 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#1a1a1a] mt-12">
+      <footer className="border-t border-surface-border mt-12">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-8 sm:py-10">
           <div className="flex flex-col items-center gap-4">
-            <p className="text-sm text-gray-500">
-              Built by <span className="text-gray-300 font-medium">Chan Cagara</span> — n8n Workflow Specialist
+            <p className="text-sm text-zinc-400">
+              Built by <span className="text-zinc-200 font-medium">Chan Cagara</span> — n8n Workflow Specialist
             </p>
             <div className="flex items-center gap-3">
               <a
                 href="https://chanryle-cagara.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#141414] text-gray-500 transition-all hover:border-[#FF6D5A]/30 hover:text-[#FF6D5A]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-surface-card text-zinc-400 transition-all hover:border-accent/30 hover:text-accent"
                 title="Portfolio"
               >
                 <Globe className="h-4 w-4" />
@@ -178,7 +171,7 @@ function App() {
                 href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#141414] text-gray-500 transition-all hover:border-[#FF6D5A]/30 hover:text-[#FF6D5A]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-surface-card text-zinc-400 transition-all hover:border-accent/30 hover:text-accent"
                 title="Upwork"
               >
                 <Briefcase className="h-4 w-4" />
@@ -187,7 +180,7 @@ function App() {
                 href="https://linkedin.com/in/chanrylejay"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#141414] text-gray-500 transition-all hover:border-[#FF6D5A]/30 hover:text-[#FF6D5A]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-surface-card text-zinc-400 transition-all hover:border-accent/30 hover:text-accent"
                 title="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
@@ -196,13 +189,13 @@ function App() {
                 href="https://github.com/chanrylejay"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#141414] text-gray-500 transition-all hover:border-[#FF6D5A]/30 hover:text-[#FF6D5A]"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-surface-card text-zinc-400 transition-all hover:border-accent/30 hover:text-accent"
                 title="GitHub"
               >
                 <Github className="h-4 w-4" />
               </a>
             </div>
-            <p className="text-xs text-gray-600 text-center">
+            <p className="text-xs text-zinc-500 text-center">
               Need help building this? I'm available for n8n projects.
             </p>
           </div>
@@ -215,8 +208,8 @@ function App() {
           toastVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="flex items-center gap-2 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a] shadow-xl shadow-black/40 px-4 py-3 text-sm text-gray-200">
-          <Check className="h-4 w-4 text-[#FF6D5A]" />
+        <div className="flex items-center gap-2 rounded-lg bg-surface-card border border-surface-border shadow-xl shadow-black/40 px-4 py-3 text-sm text-zinc-200">
+          <Check className="h-4 w-4 text-green-500" />
           {toastMessage}
         </div>
       </div>

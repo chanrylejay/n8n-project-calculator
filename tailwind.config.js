@@ -4,12 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        accent: '#FF6D5A',
-        dark: {
-          DEFAULT: '#0D0D0D',
-          50: '#141414',
-          100: '#1a1a1a',
-          200: '#2a2a2a',
+        accent: {
+          DEFAULT: '#F97316',
+          hover: '#FB923C',
+        },
+        surface: {
+          DEFAULT: '#09090B',
+          card: '#18181B',
+          border: '#27272A',
+          hover: '#27272A80',
         },
       },
       animation: {
