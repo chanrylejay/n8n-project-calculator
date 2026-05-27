@@ -29,19 +29,19 @@ function SelectField({
   options,
   onChange,
   note,
-  section,
+  isPrimary,
 }: {
   label: string;
   value: number | null;
   options: { label: string }[];
   onChange: (idx: number | null) => void;
   note?: string;
-  section?: "primary" | "secondary";
+  isPrimary?: boolean;
 }) {
   return (
     <div className="space-y-2.5">
-      <label className={`block text-sm font-semibold ${
-        section === "primary" ? "text-zinc-50" : "text-zinc-300"
+      <label className={`block text-sm font-600 font-sans ${
+        isPrimary ? "text-text-primary" : "text-text-secondary"
       }`}>
         {label}
       </label>
@@ -49,7 +49,7 @@ function SelectField({
         <select
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
-          className={`form-input ${value !== null ? "border-accent/40 bg-accent/5" : ""}`}
+          className={`form-input ${value !== null ? "border-accent/40 bg-[rgba(217,119,87,0.06)]" : ""}`}
         >
           <option value="">Select...</option>
           {options.map((opt, i) => (
@@ -58,9 +58,9 @@ function SelectField({
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
       </div>
-      {note && <p className="text-xs text-info italic">{note}</p>}
+      {note && <p className="text-xs text-accent italic font-serif">{note}</p>}
     </div>
   );
 }
@@ -111,8 +111,8 @@ function CheckboxGroup({
 }) {
   return (
     <div className="space-y-2.5">
-      <label className="block text-sm font-semibold text-zinc-300">{label}</label>
-      <div className="rounded-lg border border-surface-border bg-surface-elevated divide-y divide-surface-border overflow-hidden">
+      <label className="block text-sm font-600 font-sans text-text-secondary">{label}</label>
+      <div className="rounded-lg border border-[#2d2c2a] bg-surface-card divide-y divide-[#2d2c2a] overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2">
           {options.map((opt, i) => {
             const isSelected = selected.includes(i);
@@ -122,26 +122,26 @@ function CheckboxGroup({
                 key={i}
                 type="button"
                 onClick={() => onToggle(i)}
-                className={`flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-all duration-200 ${col} ${
+                className={`flex items-center gap-3 px-4 py-3 text-left text-sm transition-all duration-150 font-serif ${col} ${
                   isSelected
-                    ? "bg-accent/15 text-accent font-medium"
-                    : "text-zinc-400 hover:bg-zinc-700/30 hover:text-zinc-300"
+                    ? "bg-[rgba(217,119,87,0.08)] text-text-primary"
+                    : "text-text-secondary hover:bg-[rgba(217,119,87,0.03)]"
                 }`}
               >
                 <span
-                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 ${
-                    isSelected ? "border-accent bg-accent" : "border-zinc-600"
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-150 ${
+                    isSelected ? "border-accent bg-accent" : "border-[#3e3d3a]"
                   }`}
                 >
                   {isSelected && (
-                    <svg className="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="none">
+                    <svg className="h-3 w-3 text-[#faf9f5]" viewBox="0 0 12 12" fill="none">
                       <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
                 </span>
                 <span className="flex-1">{opt.label}</span>
                 {costSuffix && opt.cost !== undefined && opt.cost > 0 && (
-                  <span className="text-zinc-500 text-xs font-normal">+${opt.cost}/mo</span>
+                  <span className="text-text-muted text-xs font-serif">+${opt.cost}/mo</span>
                 )}
               </button>
             );
@@ -192,152 +192,166 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
   }, [onChange]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Primary Section */}
-      <div className="space-y-6 pb-4 border-b border-surface-border/30">
-        <div className="space-y-1 mb-4">
-          <h3 className="text-base font-bold text-zinc-50 tracking-tight">Your Automation</h3>
-          <p className="text-xs text-zinc-500">Tell us what you're building</p>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-xl font-serif font-bold text-text-primary flex items-center gap-3">
+            <span className="font-mono text-xs font-bold text-accent">01.</span>
+            Your Automation
+          </h2>
+          <p className="text-sm text-text-muted font-serif ml-10">Tell us what you're building</p>
         </div>
         
-        <SelectField
-          label='1. What are you automating?'
-          value={formState.automation}
-          options={AUTOMATION_OPTIONS}
-          onChange={(v) => set("automation", v)}
-          section="primary"
-        />
+        <div className="space-y-6 ml-10">
+          <SelectField
+            label="What are you automating?"
+            value={formState.automation}
+            options={AUTOMATION_OPTIONS}
+            onChange={(v) => set("automation", v)}
+            isPrimary
+          />
 
-        <SelectField
-          label="2. How many apps are connected?"
-          value={formState.apps}
-          options={APPS_OPTIONS}
-          onChange={(v) => set("apps", v)}
-          section="primary"
-        />
+          <SelectField
+            label="How many apps are connected?"
+            value={formState.apps}
+            options={APPS_OPTIONS}
+            onChange={(v) => set("apps", v)}
+            isPrimary
+          />
 
-        <SelectField
-          label="3. Does it need AI?"
-          value={formState.ai}
-          options={AI_OPTIONS}
-          onChange={(v) => {
-            set("ai", v);
-            if (v === null || v === 0) {
-              set("aiProvider", null);
-            }
-          }}
-          section="primary"
-        />
+          <SelectField
+            label="Does it need AI?"
+            value={formState.ai}
+            options={AI_OPTIONS}
+            onChange={(v) => {
+              set("ai", v);
+              if (v === null || v === 0) {
+                set("aiProvider", null);
+              }
+            }}
+            isPrimary
+          />
+        </div>
       </div>
+
+      <div className="h-px bg-border-color" />
 
       {/* Secondary Section */}
       <div className="space-y-6">
-        <div className="space-y-1 mb-4">
-          <h3 className="text-sm font-semibold text-zinc-300 tracking-tight">Infrastructure & Features</h3>
-          <p className="text-xs text-zinc-500">Where it runs and what it needs</p>
+        <div className="space-y-2">
+          <h2 className="text-xl font-serif font-bold text-text-primary flex items-center gap-3">
+            <span className="font-mono text-xs font-bold text-accent">02.</span>
+            Infrastructure & Features
+          </h2>
+          <p className="text-sm text-text-muted font-serif ml-10">Where it runs and what it needs</p>
         </div>
 
-        <div className="space-y-2.5">
-          <SelectField
-            label="4. Where will n8n run?"
-            value={formState.hosting}
-            options={HOSTING_OPTIONS}
-            onChange={(v) => set("hosting", v)}
-            note={hostingNote}
-          />
-          {showOtherHosting && (
-            <CustomFields
-              namePlaceholder="e.g. AWS EC2, Vultr"
-              custom={formState.customHosting}
-              onCustomChange={(e) => setCustom("customHosting", e)}
-            />
-          )}
-        </div>
-
-        <SelectField
-          label="5. How often will it run?"
-          value={formState.frequency}
-          options={FREQUENCY_OPTIONS}
-          onChange={(v) => set("frequency", v)}
-        />
-
-        {showAIProvider && (
-          <div className="animate-fadeIn space-y-2.5">
+        <div className="space-y-6 ml-10">
+          <div className="space-y-2.5">
             <SelectField
-              label="6. Which AI provider?"
-              value={formState.aiProvider}
-              options={AI_PROVIDER_OPTIONS}
-              onChange={(v) => set("aiProvider", v)}
+              label="Where will n8n run?"
+              value={formState.hosting}
+              options={HOSTING_OPTIONS}
+              onChange={(v) => set("hosting", v)}
+              note={hostingNote}
             />
-            {showOtherAI && (
+            {showOtherHosting && (
               <CustomFields
-                namePlaceholder="e.g. Claude, Mistral"
-                custom={formState.customAI}
-                onCustomChange={(e) => setCustom("customAI", e)}
+                namePlaceholder="e.g. AWS EC2, Vultr"
+                custom={formState.customHosting}
+                onCustomChange={(e) => setCustom("customHosting", e)}
               />
             )}
           </div>
-        )}
 
-        <div className="space-y-2.5">
           <SelectField
-            label="7. Database needed?"
-            value={formState.database}
-            options={DATABASE_OPTIONS}
-            onChange={(v) => set("database", v)}
+            label="How often will it run?"
+            value={formState.frequency}
+            options={FREQUENCY_OPTIONS}
+            onChange={(v) => set("frequency", v)}
           />
-          {showOtherDatabase && (
+
+          {showAIProvider && (
+            <div className="animate-fadeIn space-y-2.5">
+              <SelectField
+                label="Which AI provider?"
+                value={formState.aiProvider}
+                options={AI_PROVIDER_OPTIONS}
+                onChange={(v) => set("aiProvider", v)}
+              />
+              {showOtherAI && (
+                <CustomFields
+                  namePlaceholder="e.g. Claude, Mistral"
+                  custom={formState.customAI}
+                  onCustomChange={(e) => setCustom("customAI", e)}
+                />
+              )}
+            </div>
+          )}
+
+          <div className="space-y-2.5">
+            <SelectField
+              label="Database needed?"
+              value={formState.database}
+              options={DATABASE_OPTIONS}
+              onChange={(v) => set("database", v)}
+            />
+            {showOtherDatabase && (
+              <CustomFields
+                namePlaceholder="e.g. PlanetScale, CockroachDB"
+                custom={formState.customDatabase}
+                onCustomChange={(e) => setCustom("customDatabase", e)}
+              />
+            )}
+          </div>
+
+          <div className="space-y-2.5">
+            <SelectField
+              label="Notification channel?"
+              value={formState.notification}
+              options={NOTIFICATION_OPTIONS}
+              onChange={(v) => set("notification", v)}
+            />
+            {showOtherNotification && (
+              <CustomFields
+                namePlaceholder="e.g. PagerDuty, Discord"
+                custom={formState.customNotification}
+                onCustomChange={(e) => setCustom("customNotification", e)}
+              />
+            )}
+          </div>
+
+          <CheckboxGroup
+            label="Other tools?"
+            options={TOOL_OPTIONS.map((t) => ({ label: t.label, cost: t.cost > 0 ? t.cost : undefined }))}
+            selected={formState.tools}
+            onToggle={(i) => toggleArrayItem("tools", i)}
+            costSuffix
+          />
+          {showOtherTool && (
             <CustomFields
-              namePlaceholder="e.g. PlanetScale, CockroachDB"
-              custom={formState.customDatabase}
-              onCustomChange={(e) => setCustom("customDatabase", e)}
+              namePlaceholder="e.g. HubSpot, Zapier"
+              custom={formState.customTool}
+              onCustomChange={(e) => setCustom("customTool", e)}
             />
           )}
-        </div>
 
-        <div className="space-y-2.5">
-          <SelectField
-            label="8. Notification channel?"
-            value={formState.notification}
-            options={NOTIFICATION_OPTIONS}
-            onChange={(v) => set("notification", v)}
+          <CheckboxGroup
+            label="Add-ons?"
+            options={ADDON_OPTIONS.map((a) => ({ label: a.label, cost: a.buildCost }))}
+            selected={formState.addons}
+            onToggle={(i) => toggleArrayItem("addons", i)}
+            costSuffix
           />
-          {showOtherNotification && (
-            <CustomFields
-              namePlaceholder="e.g. PagerDuty, Discord"
-              custom={formState.customNotification}
-              onCustomChange={(e) => setCustom("customNotification", e)}
-            />
-          )}
         </div>
-
-        <CheckboxGroup
-          label="9. Other tools?"
-          options={TOOL_OPTIONS.map((t) => ({ label: t.label, cost: t.cost > 0 ? t.cost : undefined }))}
-          selected={formState.tools}
-          onToggle={(i) => toggleArrayItem("tools", i)}
-          costSuffix
-        />
-        {showOtherTool && (
-          <CustomFields
-            namePlaceholder="e.g. HubSpot, Zapier"
-            custom={formState.customTool}
-            onCustomChange={(e) => setCustom("customTool", e)}
-          />
-        )}
-
-        <CheckboxGroup
-          label="10. Add-ons?"
-          options={ADDON_OPTIONS.map((a) => ({ label: a.label, cost: a.buildCost }))}
-          selected={formState.addons}
-          onToggle={(i) => toggleArrayItem("addons", i)}
-          costSuffix
-        />
       </div>
 
+      <div className="h-px bg-border-color" />
+
       {/* Action Buttons */}
-      <div className="pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-surface-border/30">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleReset}
@@ -355,8 +369,8 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
             Share
           </button>
         </div>
-        <p className="text-xs text-zinc-500">
-          Using tools not listed here?{" "}
+        <p className="text-xs text-text-muted font-serif">
+          Using tools not listed?{" "}
           <button
             type="button"
             onClick={() => {
@@ -365,11 +379,10 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
               const event = new CustomEvent("switchTab", { detail: "describe" });
               window.dispatchEvent(event);
             }}
-            className="text-accent/80 hover:text-accent font-medium transition-colors underline underline-offset-2"
+            className="text-accent hover:underline transition-colors duration-150"
           >
-            Try the Describe Your Project tab
+            Try Describe Your Project
           </button>
-          {" — "}our AI can estimate any combination.
         </p>
       </div>
     </div>

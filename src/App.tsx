@@ -72,44 +72,36 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-surface text-zinc-50">
+    <div className="min-h-screen bg-surface-primary text-text-primary">
       {/* Header */}
-      <header className="border-b border-surface-border bg-gradient-to-b from-surface/95 to-surface/80 backdrop-blur-lg sticky top-0 z-10 shadow-lg shadow-black/20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-8 sm:py-10">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-accent-hover shadow-glow">
-              <Briefcase className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-black text-zinc-50 tracking-tight">
-                n8n Project Calculator
+      <header className="border-b border-[#2d2c2a] bg-surface-primary/95 backdrop-blur-md sticky top-0 z-10">
+        <div className="mx-auto max-w-4xl px-6 sm:px-8 py-8 sm:py-10">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-accent font-mono font-bold text-accent text-lg">
+                n8
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-serif font-bold text-text-primary tracking-tight">
+                Project Calculator
               </h1>
-              <p className="text-sm text-zinc-400 mt-1">
-                Estimate your automation build cost in 30 seconds.
-              </p>
             </div>
+            <p className="text-base text-text-secondary font-serif max-w-xl">
+              Estimate your n8n automation build cost in 30 seconds. Get a realistic breakdown of development fees, hosting, and monthly running costs.
+            </p>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-3xl px-4 sm:px-6 py-8 sm:py-12 space-y-8">
-        {/* Info section */}
-        <div className="text-center space-y-3">
-          <p className="text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto font-medium">
-            Whether you're a business owner exploring automation or a freelancer scoping a client project — get a realistic cost breakdown in seconds.
-          </p>
-          <p className="text-sm text-zinc-500">No signup required • Instant estimates • Save and share your estimates</p>
-        </div>
-
+      <main className="mx-auto max-w-4xl px-6 sm:px-8 py-12 sm:py-16 space-y-10">
         {/* Tabs */}
-        <div className="flex gap-1 rounded-lg bg-surface-elevated p-1.5 border border-surface-border shadow-lg shadow-black/20">
+        <div className="flex gap-2 bg-surface-card p-1.5 rounded-lg border border-[#2d2c2a]">
           <button
             onClick={() => handleTabChange("quick")}
-            className={`flex-1 rounded-md px-4 py-3 text-sm font-bold transition-all duration-200 ${
+            className={`flex-1 rounded-md px-4 py-3 text-sm font-600 font-sans transition-all ${
               activeTab === "quick"
-                ? "bg-gradient-to-r from-accent to-accent-hover text-white shadow-lg shadow-accent/40"
-                : "text-zinc-400 hover:text-zinc-200"
+                ? "bg-accent text-[#faf9f5] shadow-glow"
+                : "text-text-muted hover:text-text-secondary"
             }`}
           >
             Quick Estimate
@@ -117,10 +109,10 @@ function App() {
           <button
             data-tab="describe"
             onClick={() => handleTabChange("describe")}
-            className={`flex-1 rounded-md px-4 py-3 text-sm font-bold transition-all duration-200 ${
+            className={`flex-1 rounded-md px-4 py-3 text-sm font-600 font-sans transition-all ${
               activeTab === "describe"
-                ? "bg-gradient-to-r from-accent to-accent-hover text-white shadow-lg shadow-accent/40"
-                : "text-zinc-400 hover:text-zinc-200"
+                ? "bg-accent text-[#faf9f5] shadow-glow"
+                : "text-text-muted hover:text-text-secondary"
             }`}
           >
             Describe Your Project
@@ -129,8 +121,8 @@ function App() {
 
         {/* Tab content */}
         {activeTab === "quick" ? (
-          <div className="space-y-8">
-            <div className="rounded-xl border border-surface-border bg-surface-elevated p-6 sm:p-8 shadow-lg shadow-black/10">
+          <div className="space-y-10">
+            <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-8 shadow-lg">
               <QuickEstimate formState={formState} onChange={handleFormChange} onShare={handleShare} />
             </div>
             <div ref={resultsRef}>
@@ -138,8 +130,8 @@ function App() {
             </div>
           </div>
         ) : (
-          <div className="space-y-8">
-            <div className="rounded-xl border border-surface-border bg-surface-elevated p-6 sm:p-8 shadow-lg shadow-black/10">
+          <div className="space-y-10">
+            <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-8 shadow-lg">
               <DescribeProject
                 onResult={handleAIResult}
                 onError={handleAIError}
@@ -156,55 +148,58 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-surface-border/50 mt-16 bg-surface/50 backdrop-blur">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 sm:py-12">
-          <div className="flex flex-col items-center gap-6">
-            <div className="text-center space-y-2">
-              <p className="text-sm font-semibold text-zinc-300">
-                Built by <span className="text-accent font-bold">Chan Cagara</span>
-              </p>
-              <p className="text-xs text-zinc-500">n8n Workflow Specialist & Automation Engineer</p>
+      <footer className="border-t border-[#2d2c2a] bg-surface-primary/50 backdrop-blur-md mt-20">
+        <div className="mx-auto max-w-4xl px-6 sm:px-8 py-12">
+          <div className="space-y-6">
+            <div className="h-px bg-[#2d2c2a]" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <p className="text-xs font-mono font-bold text-accent uppercase tracking-widest">About</p>
+                <p className="text-sm text-text-secondary font-serif">
+                  Built by <span className="text-accent font-semibold">Chanryle Jay Cagara</span>, an AI Automation Specialist building production n8n workflows and self-hosted infrastructure.
+                </p>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs font-mono font-bold text-accent uppercase tracking-widest">Connect</p>
+                <div className="flex items-center gap-4">
+                  <a
+                    href="https://chanryle-cagara.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-text-muted hover:text-accent transition-colors duration-150 font-sans text-sm"
+                  >
+                    Portfolio
+                  </a>
+                  <a
+                    href="https://linkedin.com/in/chanrylejay"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-text-muted hover:text-accent transition-colors duration-150 font-sans text-sm"
+                  >
+                    LinkedIn
+                  </a>
+                  <a
+                    href="https://github.com/chanrylejay"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-text-muted hover:text-accent transition-colors duration-150 font-sans text-sm"
+                  >
+                    GitHub
+                  </a>
+                  <a
+                    href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-text-muted hover:text-accent transition-colors duration-150 font-sans text-sm"
+                  >
+                    Upwork
+                  </a>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://chanryle-cagara.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-border bg-surface-elevated text-zinc-400 transition-all hover:border-accent/50 hover:text-accent hover:shadow-glow-sm"
-                title="Portfolio"
-              >
-                <Globe className="h-5 w-5" />
-              </a>
-              <a
-                href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-border bg-surface-elevated text-zinc-400 transition-all hover:border-accent/50 hover:text-accent hover:shadow-glow-sm"
-                title="Upwork"
-              >
-                <Briefcase className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com/in/chanrylejay"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-border bg-surface-elevated text-zinc-400 transition-all hover:border-accent/50 hover:text-accent hover:shadow-glow-sm"
-                title="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href="https://github.com/chanrylejay"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-border bg-surface-elevated text-zinc-400 transition-all hover:border-accent/50 hover:text-accent hover:shadow-glow-sm"
-                title="GitHub"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-            </div>
-            <p className="text-xs text-zinc-600 text-center">
-              Need help building your n8n automation? I'm available for freelance projects.
+            <div className="h-px bg-[#2d2c2a]" />
+            <p className="text-xs text-text-muted text-center font-sans">
+              Designed & built by Chanryle. Open to freelance n8n projects.
             </p>
           </div>
         </div>
@@ -212,11 +207,11 @@ function App() {
 
       {/* Toast notification */}
       <div
-        className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
+        className={`fixed bottom-6 right-6 z-50 transition-all duration-300 font-sans ${
           toastVisible ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
-        <div className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-success to-success-dark border border-success/50 shadow-lg shadow-success/30 px-5 py-3 text-sm font-medium text-white">
+        <div className="flex items-center gap-3 rounded-lg bg-accent text-[#faf9f5] border border-accent/40 shadow-glow px-5 py-3 text-sm font-500">
           <Check className="h-5 w-5" />
           {toastMessage}
         </div>

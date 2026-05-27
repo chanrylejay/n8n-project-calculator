@@ -16,41 +16,25 @@ function isAIResult(result: ResultSource): result is AIResultAdapter {
 function Card({
   icon: Icon,
   title,
+  number,
   children,
-  accent,
-  type = "default",
 }: {
   icon: React.ElementType;
   title: string;
+  number?: string;
   children: React.ReactNode;
-  accent?: boolean;
-  type?: "default" | "success" | "info" | "warning";
 }) {
-  const colorMap = {
-    default: "border-surface-border",
-    success: "border-success/30 bg-success/5",
-    info: "border-info/30 bg-info/5",
-    warning: "border-warning/30 bg-warning/5",
-  };
-
-  const iconColorMap = {
-    default: "bg-zinc-800 text-zinc-400",
-    success: "bg-success/15 text-success",
-    info: "bg-info/15 text-info",
-    warning: "bg-warning/15 text-warning",
-  };
-
   return (
-    <div className={`group relative overflow-hidden rounded-xl border ${colorMap[type]} bg-surface-elevated p-6 transition-all duration-300 hover:border-accent/20 hover:shadow-glow-sm`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.02] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <div className="relative space-y-4">
-        <div className="flex items-center gap-3">
-          <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-            accent ? iconColorMap[type] : iconColorMap.default
-          }`}>
-            <Icon className="h-5 w-5" />
+    <div className="group relative rounded-lg border border-[#2d2c2a] bg-surface-card p-6 transition-all duration-150 hover:border-accent/30 hover:shadow-glow">
+      <div className="space-y-4">
+        <div className="flex items-start gap-3">
+          {number && (
+            <span className="font-mono text-xs font-bold text-accent tracking-widest">{number}.</span>
+          )}
+          <div className="flex items-center gap-3 flex-1">
+            <Icon className="h-5 w-5 text-accent shrink-0" />
+            <h3 className="text-sm font-mono font-bold text-text-primary uppercase tracking-widest">{title}</h3>
           </div>
-          <h3 className="text-sm font-bold text-zinc-50 uppercase tracking-[0.08em]">{title}</h3>
         </div>
         {children}
       </div>
@@ -60,9 +44,9 @@ function Card({
 
 function CostLine({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className={`flex items-center justify-between text-sm ${highlight ? "py-1" : ""}`}>
-      <span className={highlight ? "font-medium text-zinc-200" : "text-zinc-500"}>{label}</span>
-      <span className={highlight ? "font-semibold text-zinc-50" : "text-zinc-300"}>{value}</span>
+    <div className={`flex items-center justify-between text-sm font-serif ${highlight ? "py-1" : ""}`}>
+      <span className={highlight ? "font-semibold text-text-primary" : "text-text-secondary"}>{label}</span>
+      <span className={highlight ? "font-bold text-text-primary" : "text-text-secondary"}>{value}</span>
     </div>
   );
 }
@@ -75,17 +59,17 @@ function formatMoney(n: number): string {
 
 function ResultsCTA() {
   return (
-    <div className="rounded-xl border border-surface-border bg-surface-elevated p-6 text-center space-y-4">
+    <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-6 text-center space-y-4">
       <div className="space-y-2">
-        <p className="text-sm font-semibold text-zinc-300">Ready to build it?</p>
-        <p className="text-xs text-zinc-500">Let's discuss your project and get started.</p>
+        <p className="text-sm font-serif font-semibold text-text-primary">Ready to build it?</p>
+        <p className="text-xs text-text-muted font-serif">Let's discuss your project and get started.</p>
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <a
           href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-primary text-sm"
+          className="btn-primary text-sm w-full sm:w-auto"
         >
           <ExternalLink className="h-4 w-4" />
           Hire me on Upwork
@@ -94,7 +78,7 @@ function ResultsCTA() {
           href="https://linkedin.com/in/chanrylejay"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-secondary"
+          className="btn-secondary w-full sm:w-auto"
         >
           Connect on LinkedIn
         </a>
@@ -111,23 +95,23 @@ interface ResultsPanelProps {
 export default function ResultsPanel({ result, error }: ResultsPanelProps) {
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-warning/40 bg-warning/5 py-12 text-center px-6 animate-fadeIn">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-warning/15">
-          <Info className="h-6 w-6 text-warning" />
+      <div className="flex flex-col items-center justify-center rounded-lg border border-accent/20 bg-accent/5 py-12 text-center px-6 animate-fadeIn">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10">
+          <Info className="h-6 w-6 text-accent" />
         </div>
-        <p className="text-sm text-zinc-300 max-w-md font-medium">{error}</p>
+        <p className="text-sm text-text-primary max-w-md font-serif">{error}</p>
       </div>
     );
   }
 
   if (!result) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-surface-border bg-surface-elevated py-20 text-center px-6">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-zinc-800/50">
-          <Layers className="h-6 w-6 text-zinc-600" />
+      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#2d2c2a] bg-[#1a1a18] py-20 text-center px-6">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-[#2d2c2a]/50">
+          <Layers className="h-6 w-6 text-[#3e3d3a]" />
         </div>
-        <p className="text-sm font-medium text-zinc-400">Select options above to see your estimate</p>
-        <p className="text-xs text-zinc-600 mt-2">Answer at least the automation type to get started</p>
+        <p className="text-sm font-serif font-medium text-text-secondary">Select options above to see your estimate</p>
+        <p className="text-xs text-text-muted mt-2 font-serif">Answer at least the automation type to get started</p>
       </div>
     );
   }
