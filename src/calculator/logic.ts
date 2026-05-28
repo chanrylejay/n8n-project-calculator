@@ -262,7 +262,12 @@ export function calculate(state: FormState): CalculationResult | null {
       aiModelName = state.customAI.name || "Other AI provider";
     } else {
       aiCost = provider.costs[aiLevel];
-      aiModelName = provider.label;
+      // If "Not sure — recommend cheapest" is selected, show a friendly model name
+      if (provider.label === "Not sure — recommend cheapest") {
+        aiModelName = "DeepSeek V4 Flash (recommended)";
+      } else {
+        aiModelName = provider.label;
+      }
     }
   }
 

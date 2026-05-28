@@ -176,6 +176,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
     [formState, set]
   );
 
+  // Show AI provider dropdown only when AI is selected AND it's not "No AI needed" (index 0)
   const showAIProvider = formState.ai !== null && formState.ai !== 0;
 
   const hostingNote =
@@ -226,6 +227,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
             options={AI_OPTIONS}
             onChange={(v) => {
               set("ai", v);
+              // If "No AI needed" (index 0) or reset to null, hide AI provider and reset its value
               if (v === null || v === 0) {
                 set("aiProvider", null);
               }
@@ -355,15 +357,14 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
           <button
             type="button"
             onClick={handleReset}
-            className="btn-secondary"
+            className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors duration-150 font-sans"
           >
-            <RotateCcw className="h-4 w-4" />
-            Reset
+            Reset all
           </button>
           <button
             type="button"
             onClick={onShare}
-            className="btn-secondary"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300 hover:text-zinc-200 hover:border-zinc-500 transition-all duration-150 font-sans"
           >
             <Share2 className="h-4 w-4" />
             Share

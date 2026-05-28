@@ -59,26 +59,25 @@ function formatMoney(n: number): string {
 
 function ResultsCTA() {
   return (
-    <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-6 text-center space-y-4">
-      <div className="space-y-2">
-        <p className="text-sm font-serif font-semibold text-text-primary">Ready to build it?</p>
-        <p className="text-xs text-text-muted font-serif">Let's discuss your project and get started.</p>
-      </div>
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+    <div className="text-center space-y-3 pt-2">
+      <div className="h-px bg-zinc-800" />
+      <p className="text-sm text-zinc-400" style={{ fontSize: "14px" }}>Ready to build it?</p>
+      <p className="text-xs text-zinc-500" style={{ fontSize: "13px" }}>Let's discuss your project and get started.</p>
+      <div className="flex items-center justify-center gap-2 text-sm">
         <a
           href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-primary text-sm w-full sm:w-auto"
+          className="text-[#F97316] hover:underline transition-colors duration-150"
         >
-          <ExternalLink className="h-4 w-4" />
           Hire me on Upwork
         </a>
+        <span className="text-zinc-500">·</span>
         <a
           href="https://linkedin.com/in/chanrylejay"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-secondary w-full sm:w-auto"
+          className="text-[#F97316] hover:underline transition-colors duration-150"
         >
           Connect on LinkedIn
         </a>
@@ -107,14 +106,12 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
   if (!result) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#2d2c2a] bg-[#1a1a18] py-20 text-center px-6">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-[#2d2c2a]/50">
-          <Layers className="h-6 w-6 text-[#3e3d3a]" />
-        </div>
-        <p className="text-sm font-serif font-medium text-text-secondary">Select options above to see your estimate</p>
-        <p className="text-xs text-text-muted mt-2 font-serif">Answer at least the automation type to get started</p>
+        <div className="text-3xl mb-3">🧮</div>
+        <p className="text-base text-zinc-500 font-serif">Select options above to see your estimate</p>
       </div>
     );
   }
+
 
   if (isAIResult(result)) {
     return <AIResultsPanel data={result.data} />;
@@ -166,12 +163,15 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
-              <CostLine label={r.hostingLabel} value={`${formatMoney(r.hostingCost)}/mo`} />
-              {r.aiCost > 0 && <CostLine label={r.aiModelName} value={`${formatMoney(r.aiCost)}/mo`} />}
-              {r.databaseCost > 0 && <CostLine label={r.databaseLabel} value={`${formatMoney(r.databaseCost)}/mo`} />}
-              {r.notificationCost > 0 && <CostLine label={r.notificationLabel} value={`${formatMoney(r.notificationCost)}/mo`} />}
+              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} />
+              <CostLine 
+                label="AI API" 
+                value={`${formatMoney(r.aiCost)}/mo`}
+              />
+              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} />
+              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} />
               {r.toolsBreakdown.map((t, i) => 
-                t.cost > 0 && <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} />
+                <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} />
               )}
             </div>
             
@@ -190,6 +190,7 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
             </div>
           </div>
         </Card>
+
       </div>
 
       {/* Card 3: Suggested Architecture — full width */}
@@ -222,13 +223,10 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
             </div>
           </div>
 
-          {(r.aiModelName !== "None" || r.databaseLabel || r.notificationLabel || r.toolsBreakdown.length > 0) && (
+          {(r.databaseLabel || r.notificationLabel || r.toolsBreakdown.length > 0) && (
             <div className="pt-3 border-t border-[#2d2c2a]">
               <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 font-mono">Key Integrations</p>
               <div className="flex flex-wrap gap-2">
-                {r.aiModelName !== "None" && (
-                  <span className="rounded-md bg-accent/15 border border-accent/30 px-2.5 py-1 text-xs font-medium text-accent font-serif">{r.aiModelName}</span>
-                )}
                 {r.databaseLabel && r.databaseCost >= 0 && (
                   <span className="rounded-md bg-accent/10 border border-accent/20 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.databaseLabel}</span>
                 )}

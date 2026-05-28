@@ -52,7 +52,7 @@ function App() {
   const showToast = useCallback((message: string) => {
     setToastMessage(message);
     setToastVisible(true);
-    setTimeout(() => setToastVisible(false), 2500);
+    setTimeout(() => setToastVisible(false), 3000);
   }, []);
 
   const handleShare = useCallback(async () => {
@@ -67,18 +67,20 @@ function App() {
   return (
     <div className="min-h-screen bg-surface-primary text-text-primary">
       {/* Header */}
-      <header className="border-b border-[#2d2c2a] bg-surface-primary">
+      <header className="border-b border-[#2d2c2a] bg-surface-primary relative overflow-hidden">
+        {/* Gradient glow line below header */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-60" />
         <div className="mx-auto max-w-4xl px-6 sm:px-8 py-6 sm:py-8">
           <div className="flex flex-col items-center text-center space-y-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-accent font-mono font-bold text-accent text-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-accent font-mono font-bold text-accent text-lg logo-pulse">
                 n8n
               </div>
               <h1 className="text-3xl sm:text-4xl font-serif font-bold text-text-primary tracking-tight">
                 Project Calculator
               </h1>
             </div>
-            <p className="text-sm sm:text-base text-text-secondary font-serif max-w-xl">
+            <p className="text-sm sm:text-[17px] text-text-secondary font-serif max-w-xl leading-relaxed">
               Estimate your n8n automation build cost in 30 seconds. Get a realistic breakdown of development fees, hosting, and monthly running costs.
             </p>
           </div>
@@ -132,9 +134,12 @@ function App() {
                 setIsLoading={setAiLoading}
               />
             </div>
-            <div>
-              <ResultsPanel result={resultSource} error={aiError || undefined} />
-            </div>
+            {/* Only show results when there's an AI result or error */}
+            {(aiResult || aiError) && (
+              <div>
+                <ResultsPanel result={resultSource} error={aiError || undefined} />
+              </div>
+            )}
           </div>
         )}
       </main>

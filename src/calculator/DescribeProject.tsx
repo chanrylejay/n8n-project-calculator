@@ -123,13 +123,14 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
           className="form-input resize-none min-h-[140px] disabled:opacity-60 disabled:cursor-not-allowed"
         />
         <div className="flex items-center justify-between">
-          <p className="text-xs text-zinc-500">
-            Powered by AI — <span className="text-accent font-semibold">{Math.max(0, remaining)}</span> free estimate{remaining !== 1 ? "s" : ""} remaining today
-          </p>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-800 px-3 py-1 text-sm text-zinc-400">
+            ✨ Powered by AI — <span className="text-accent font-bold">{Math.max(0, remaining)}</span> free estimate{remaining !== 1 ? "s" : ""} remaining today
+          </span>
           {remaining === 0 && (
             <p className="text-xs text-warning font-medium">Limit reached — try Quick Estimate or come back tomorrow</p>
           )}
         </div>
+
       </div>
 
       <button
