@@ -84,9 +84,10 @@ echo "DEEPSEEK_API_KEY=your_api_key_here" > .env
 
 # Start dev server
 npm run dev
-```
 
-Open http://localhost:5173
+# Open in browser
+start http://localhost:5173
+```
 
 ### Deploy to Vercel
 
@@ -145,7 +146,7 @@ n8n-project-calculator/
 **Chanryle Jay Cagara** — AI Automation Specialist
 
 - 🌐 https://chanryle-cagara.vercel.app
-- 💼 Upwork
+- 💼 [Upwork](https://www.upwork.com/freelancers/~01c62edc2e375ef8ce?mp_source=share)
 - 🔗 https://linkedin.com/in/chanrylejay
 - 🐙 [GitHub](https://github.com/chanrylejay)
 
