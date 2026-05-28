@@ -40,14 +40,14 @@ function SelectField({
 }) {
   return (
     <div className="space-y-2.5">
-      <label className={`block text-sm font-600 font-sans ${
+      <label className={`block text-base font-medium font-sans ${
         isPrimary ? "text-text-primary" : "text-text-secondary"
       }`}>
         {label}
       </label>
       <div className="relative">
         <select
-          value={value ?? ""}
+          value={value === null ? "" : value}
           onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
           className={`form-input ${value !== null ? "border-accent/40 bg-[rgba(217,119,87,0.06)]" : ""}`}
         >
@@ -111,7 +111,7 @@ function CheckboxGroup({
 }) {
   return (
     <div className="space-y-2.5">
-      <label className="block text-sm font-600 font-sans text-text-secondary">{label}</label>
+      <label className="block text-base font-medium font-sans text-text-secondary">{label}</label>
       <div className="rounded-lg border border-[#2d2c2a] bg-surface-card divide-y divide-[#2d2c2a] overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2">
           {options.map((opt, i) => {
@@ -122,7 +122,7 @@ function CheckboxGroup({
                 key={i}
                 type="button"
                 onClick={() => onToggle(i)}
-                className={`flex items-center gap-3 px-4 py-3 text-left text-sm transition-all duration-150 font-serif ${col} ${
+                className={`flex items-center gap-3 px-4 py-3 text-left text-[15px] transition-all duration-150 font-serif ${col} ${
                   isSelected
                     ? "bg-[rgba(217,119,87,0.08)] text-text-primary"
                     : "text-text-secondary hover:bg-[rgba(217,119,87,0.03)]"
@@ -197,11 +197,11 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
       {/* Primary Section */}
       <div className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-xl font-serif font-bold text-text-primary flex items-center gap-3">
+          <h2 className="text-[22px] font-serif font-bold text-text-primary flex items-center gap-3">
             <span className="font-mono text-xs font-bold text-accent">01.</span>
             Your Automation
           </h2>
-          <p className="text-sm text-text-muted font-serif ml-10">Tell us what you're building</p>
+          <p className="text-base text-text-muted font-serif ml-10">Tell us what you're building</p>
         </div>
         
         <div className="space-y-6 ml-10">
@@ -242,11 +242,11 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
       {/* Secondary Section */}
       <div className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-xl font-serif font-bold text-text-primary flex items-center gap-3">
+          <h2 className="text-[22px] font-serif font-bold text-text-primary flex items-center gap-3">
             <span className="font-mono text-xs font-bold text-accent">02.</span>
             Infrastructure & Features
           </h2>
-          <p className="text-sm text-text-muted font-serif ml-10">Where it runs and what it needs</p>
+          <p className="text-base text-text-muted font-serif ml-10">Where it runs and what it needs</p>
         </div>
 
         <div className="space-y-6 ml-10">

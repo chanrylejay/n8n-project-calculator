@@ -76,11 +76,11 @@ function App() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-accent font-mono font-bold text-accent text-lg logo-pulse">
                 n8n
               </div>
-              <h1 className="text-3xl sm:text-4xl font-serif font-bold text-text-primary tracking-tight">
+              <h1 className="text-3xl sm:text-[36px] font-serif font-bold text-text-primary tracking-tight">
                 Project Calculator
               </h1>
             </div>
-            <p className="text-sm sm:text-[17px] text-text-secondary font-serif max-w-xl leading-relaxed">
+            <p className="text-sm sm:text-[18px] text-text-secondary font-serif max-w-xl leading-relaxed">
               Estimate your n8n automation build cost in 30 seconds. Get a realistic breakdown of development fees, hosting, and monthly running costs.
             </p>
           </div>
@@ -93,7 +93,7 @@ function App() {
         <div className="flex gap-2 bg-surface-card p-1.5 rounded-lg border border-[#2d2c2a]">
           <button
             onClick={() => handleTabChange("quick")}
-            className={`flex-1 rounded-md px-4 py-3 text-sm font-600 font-sans transition-all ${
+            className={`flex-1 rounded-md px-4 py-3 text-base font-600 font-sans transition-all ${
               activeTab === "quick"
                 ? "bg-accent text-[#faf9f5] shadow-glow"
                 : "text-text-muted hover:text-text-secondary"
@@ -104,7 +104,7 @@ function App() {
           <button
             data-tab="describe"
             onClick={() => handleTabChange("describe")}
-            className={`flex-1 rounded-md px-4 py-3 text-sm font-600 font-sans transition-all ${
+            className={`flex-1 rounded-md px-4 py-3 text-base font-600 font-sans transition-all ${
               activeTab === "describe"
                 ? "bg-accent text-[#faf9f5] shadow-glow"
                 : "text-text-muted hover:text-text-secondary"
@@ -151,13 +151,13 @@ function App() {
             <div className="h-px bg-[#2d2c2a]" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <p className="text-xs font-mono font-bold text-accent uppercase tracking-widest">About</p>
+                <p className="text-sm font-mono font-bold text-accent uppercase tracking-widest">About</p>
                 <p className="text-sm text-text-secondary font-serif">
                   Built by <span className="text-accent font-semibold">Chanryle Jay Cagara</span>, an AI Automation Specialist building production n8n workflows and self-hosted infrastructure.
                 </p>
               </div>
               <div className="space-y-3">
-                <p className="text-xs font-mono font-bold text-accent uppercase tracking-widest">Connect</p>
+                <p className="text-sm font-mono font-bold text-accent uppercase tracking-widest">Connect</p>
                 <div className="flex items-center gap-4">
                   <a
                     href="https://chanryle-cagara.vercel.app"
@@ -195,7 +195,7 @@ function App() {
               </div>
             </div>
             <div className="h-px bg-[#2d2c2a]" />
-            <p className="text-xs text-text-muted text-center font-sans">
+            <p className="text-sm text-text-muted text-center font-sans">
               Designed & built by Chanryle. Open to freelance n8n projects.
             </p>
           </div>

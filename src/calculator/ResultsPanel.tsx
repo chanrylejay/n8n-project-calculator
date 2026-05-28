@@ -29,11 +29,11 @@ function Card({
       <div className="space-y-4">
         <div className="flex items-start gap-3">
           {number && (
-            <span className="font-mono text-xs font-bold text-accent tracking-widest">{number}.</span>
+            <span className="font-mono text-sm font-bold text-zinc-400 tracking-widest">{number}.</span>
           )}
           <div className="flex items-center gap-3 flex-1">
             <Icon className="h-5 w-5 text-accent shrink-0" />
-            <h3 className="text-sm font-mono font-bold text-text-primary uppercase tracking-widest">{title}</h3>
+            <h3 className="text-[15px] font-mono font-bold text-text-primary uppercase tracking-widest">{title}</h3>
           </div>
         </div>
         {children}
@@ -42,11 +42,11 @@ function Card({
   );
 }
 
-function CostLine({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function CostLine({ label, value, highlight, valueColor }: { label: string; value: string; highlight?: boolean; valueColor?: string }) {
   return (
-    <div className={`flex items-center justify-between text-sm font-serif ${highlight ? "py-1" : ""}`}>
-      <span className={highlight ? "font-semibold text-text-primary" : "text-text-secondary"}>{label}</span>
-      <span className={highlight ? "font-bold text-text-primary" : "text-text-secondary"}>{value}</span>
+    <div className={`flex items-center justify-between text-base font-serif ${highlight ? "py-1" : ""}`}>
+      <span className={highlight ? "font-semibold text-zinc-200" : "text-text-secondary"}>{label}</span>
+      <span className={valueColor || (highlight ? "font-bold text-[#22C55E]" : "text-text-secondary")}>{value}</span>
     </div>
   );
 }
@@ -126,13 +126,13 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         <Card icon={Hammer} title="Build Cost" number="01">
           <div className="space-y-4">
             <div>
-              <div className="text-xs text-text-muted mb-2 font-mono uppercase tracking-wider">Estimated Cost</div>
+              <div className="text-sm text-text-muted mb-2 font-mono uppercase tracking-wider">Estimated Cost</div>
               <div className="text-4xl font-bold text-accent tracking-tight font-serif">
                 {r.buildMin === r.buildMax
                   ? `${formatMoney(r.buildMin)}`
                   : `${formatMoney(r.buildMin)}–${formatMoney(r.buildMax)}`}
               </div>
-              <div className="text-xs text-text-muted mt-2 font-serif">flat rate</div>
+              <div className="text-sm text-zinc-500 mt-2 font-serif">flat rate</div>
             </div>
             
             {r.addOnBreakdown.length > 0 && (
@@ -141,14 +141,14 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
                 {r.addOnBreakdown.map((a, i) => (
                   <div key={i} className="flex justify-between text-sm font-serif">
                     <span className="text-text-secondary">{a.label}</span>
-                    <span className="text-text-primary font-semibold">+${a.cost}</span>
+                    <span className="text-zinc-300 font-semibold">+${a.cost}</span>
                   </div>
                 ))}
               </div>
             )}
             
             <div className="space-y-2 pt-3 border-t border-[#2d2c2a]">
-              <CostLine label="Delivery timeframe" value={`${r.deliveryMin}–${r.deliveryMax} days`} />
+              <CostLine label="Delivery timeframe" value={`${r.deliveryMin}–${r.deliveryMax} days`} valueColor="text-zinc-200" />
               <div className="flex items-center justify-between">
                 <span className="text-sm text-text-secondary font-serif">Complexity</span>
                 <span className="inline-flex items-center rounded-full bg-accent/15 border border-accent/30 px-3 py-1 text-xs font-bold text-accent font-mono tracking-wider">
@@ -163,15 +163,16 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
-              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} />
+              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} valueColor={r.hostingCost === 0 ? "text-zinc-500" : "text-zinc-200"} />
               <CostLine 
                 label="AI API" 
                 value={`${formatMoney(r.aiCost)}/mo`}
+                valueColor={r.aiCost === 0 ? "text-zinc-500" : "text-zinc-200"}
               />
-              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} />
-              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} />
+              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} valueColor={r.databaseCost === 0 ? "text-zinc-500" : "text-zinc-200"} />
+              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} valueColor={r.notificationCost === 0 ? "text-zinc-500" : "text-zinc-200"} />
               {r.toolsBreakdown.map((t, i) => 
-                <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} />
+                <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} valueColor={t.cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
               )}
             </div>
             
@@ -198,28 +199,28 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Workflows</div>
-              <div className="text-2xl font-bold text-accent font-serif">
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">Workflows</div>
+              <div className="text-2xl font-bold text-[#38BDF8] font-serif">
                 {r.workflowsMin === r.workflowsMax
                   ? r.workflowsMin
                   : `${r.workflowsMin}–${r.workflowsMax}`}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Nodes</div>
-              <div className="text-2xl font-bold text-accent font-serif">{r.nodesMin}–{r.nodesMax}</div>
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">Nodes</div>
+              <div className="text-2xl font-bold text-[#38BDF8] font-serif">{r.nodesMin}–{r.nodesMax}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Executions</div>
-              <div className="text-base font-semibold text-accent font-serif">
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">Executions</div>
+              <div className="text-base font-semibold text-[#38BDF8] font-serif">
                 {typeof r.executionsPerMonth === "number"
                   ? r.executionsPerMonth.toLocaleString()
                   : r.executionsPerMonth}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">AI Model</div>
-              <div className="text-sm font-semibold text-accent truncate font-serif">{r.aiModelName !== "None" ? r.aiModelName : "—"}</div>
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">AI Model</div>
+              <div className="text-sm font-semibold text-[#38BDF8] font-serif">{r.aiModelName !== "None" ? r.aiModelName : "—"}</div>
             </div>
           </div>
 
@@ -228,13 +229,13 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
               <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 font-mono">Key Integrations</p>
               <div className="flex flex-wrap gap-2">
                 {r.databaseLabel && r.databaseCost >= 0 && (
-                  <span className="rounded-md bg-accent/10 border border-accent/20 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.databaseLabel}</span>
+                  <span className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.databaseLabel}</span>
                 )}
                 {r.notificationLabel && (
-                  <span className="rounded-md bg-accent/10 border border-accent/20 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.notificationLabel}</span>
+                  <span className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.notificationLabel}</span>
                 )}
                 {r.toolsBreakdown.map((t, i) => (
-                  <span key={i} className="rounded-md bg-[#2d2c2a] border border-[#3e3d3a] px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{t.label}</span>
+                  <span key={i} className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{t.label}</span>
                 ))}
               </div>
             </div>
@@ -257,16 +258,16 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
         <Card icon={Hammer} title="Build Cost" number="01">
           <div className="space-y-4">
             <div>
-              <div className="text-xs text-text-muted mb-2 font-mono uppercase tracking-wider">Estimated Cost</div>
+              <div className="text-sm text-text-muted mb-2 font-mono uppercase tracking-wider">Estimated Cost</div>
               <div className="text-4xl font-bold text-accent tracking-tight font-serif">
                 {d.build_cost_min === d.build_cost_max
                   ? `${formatMoney(d.build_cost_min)}`
                   : `${formatMoney(d.build_cost_min)}–${formatMoney(d.build_cost_max)}`}
               </div>
-              <div className="text-xs text-text-muted mt-2 font-serif">flat rate</div>
+              <div className="text-sm text-zinc-500 mt-2 font-serif">flat rate</div>
             </div>
             <div className="space-y-2 pt-3 border-t border-[#2d2c2a]">
-              <CostLine label="Delivery timeframe" value={`${d.delivery_days_min}–${d.delivery_days_max} days`} />
+              <CostLine label="Delivery timeframe" value={`${d.delivery_days_min}–${d.delivery_days_max} days`} valueColor="text-zinc-200" />
               <div className="flex items-center justify-between">
                 <span className="text-sm text-text-secondary font-serif">Complexity</span>
                 <span className="inline-flex items-center rounded-full bg-accent/15 border border-accent/30 px-3 py-1 text-xs font-bold text-accent font-mono tracking-wider">
@@ -277,7 +278,7 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
             {d.key_integrations.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-2">
                 {d.key_integrations.map((app, i) => (
-                  <span key={i} className="rounded-md bg-[#2d2c2a] border border-[#3e3d3a] px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">
+                  <span key={i} className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">
                     {app}
                   </span>
                 ))}
@@ -290,10 +291,10 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
         <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
-              <CostLine label="Hosting" value={`${formatMoney(d.monthly_hosting_cost)}/mo`} />
-              <CostLine label="AI API" value={`${formatMoney(d.monthly_ai_cost)}/mo`} />
-              <CostLine label="Database" value={`${formatMoney(d.monthly_db_cost)}/mo`} />
-              <CostLine label="Tools & Services" value={`${formatMoney(d.monthly_tools_cost)}/mo`} />
+              <CostLine label="Hosting" value={`${formatMoney(d.monthly_hosting_cost)}/mo`} valueColor={d.monthly_hosting_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
+              <CostLine label="AI API" value={`${formatMoney(d.monthly_ai_cost)}/mo`} valueColor={d.monthly_ai_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
+              <CostLine label="Database" value={`${formatMoney(d.monthly_db_cost)}/mo`} valueColor={d.monthly_db_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
+              <CostLine label="Tools & Services" value={`${formatMoney(d.monthly_tools_cost)}/mo`} valueColor={d.monthly_tools_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
             </div>
             <div className="pt-3 border-t border-[#2d2c2a]">
               <CostLine 
@@ -311,16 +312,16 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Workflows</div>
-              <div className="text-2xl font-bold text-accent font-serif">{d.workflows_needed}</div>
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">Workflows</div>
+              <div className="text-2xl font-bold text-[#38BDF8] font-serif">{d.workflows_needed}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Nodes</div>
-              <div className="text-2xl font-bold text-accent font-serif">{d.estimated_nodes_min}–{d.estimated_nodes_max}</div>
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">Nodes</div>
+              <div className="text-2xl font-bold text-[#38BDF8] font-serif">{d.estimated_nodes_min}–{d.estimated_nodes_max}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">AI Model</div>
-              <div className="text-sm font-semibold text-accent truncate font-serif">{d.ai_model_recommended ?? "None"}</div>
+              <div className="text-xs text-zinc-400 uppercase font-semibold tracking-widest font-mono">AI Model</div>
+              <div className="text-sm font-semibold text-[#38BDF8] font-serif">{d.ai_model_recommended ?? "None"}</div>
             </div>
           </div>
 

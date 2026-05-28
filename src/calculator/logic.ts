@@ -237,7 +237,7 @@ export function calculate(state: FormState): CalculationResult | null {
 
   // Hosting
   let hostingCost = 0;
-  let hostingLabel = "";
+  let hostingLabel = "Hosting";
   let hostingNote: string | undefined;
   if (state.hosting !== null) {
     const hOpt = HOSTING_OPTIONS[state.hosting];
@@ -246,7 +246,6 @@ export function calculate(state: FormState): CalculationResult | null {
       hostingLabel = state.customHosting.name || "Other hosting";
     } else {
       hostingCost = hOpt.cost;
-      hostingLabel = hOpt.label;
       hostingNote = hOpt.note;
     }
   }
@@ -273,7 +272,7 @@ export function calculate(state: FormState): CalculationResult | null {
 
   // Database
   let databaseCost = 0;
-  let databaseLabel = "";
+  let databaseLabel = "Database";
   if (state.database !== null) {
     const dOpt = DATABASE_OPTIONS[state.database];
     if (isOtherOption(dOpt.cost)) {
@@ -281,13 +280,12 @@ export function calculate(state: FormState): CalculationResult | null {
       databaseLabel = state.customDatabase.name || "Other database";
     } else {
       databaseCost = dOpt.cost;
-      databaseLabel = dOpt.label;
     }
   }
 
   // Notification
   let notificationCost = 0;
-  let notificationLabel = "";
+  let notificationLabel = "Notifications";
   if (state.notification !== null) {
     const nOpt = NOTIFICATION_OPTIONS[state.notification];
     if (isOtherOption(nOpt.cost)) {
@@ -295,7 +293,6 @@ export function calculate(state: FormState): CalculationResult | null {
       notificationLabel = state.customNotification.name || "Other channel";
     } else {
       notificationCost = nOpt.cost;
-      notificationLabel = nOpt.label;
     }
   }
 

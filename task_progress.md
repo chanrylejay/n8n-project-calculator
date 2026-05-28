@@ -1,15 +1,19 @@
 # Task Progress
 
 ## Bug Fixes
-- [x] Bug Fix 1: Fix "Does it need AI?" dropdown reset (logic.ts + QuickEstimate.tsx)
-- [x] Bug Fix 2: Fix "Not sure — recommend cheapest" label leaking (logic.ts + ResultsPanel.tsx)
-- [x] Bug Fix 3: Hide empty results card on Describe Your Project tab (App.tsx)
+- [x] Fix AI dropdown cannot reset to "No AI needed"
+- [x] Fix "Not sure yet" leaking as line item name in Monthly Cost card
+- [x] Fix truncated AI Model text in Architecture card
 
-## UI Upgrades
-- [x] UI Upgrade 1: Make "Ready to build it?" more subtle (ResultsPanel.tsx)
-- [x] UI Upgrade 2: Add Share button (App.tsx + QuickEstimate.tsx)
-- [x] UI Upgrade 3: Add Reset button on Quick Estimate (QuickEstimate.tsx)
-- [x] UI Upgrade 4: Placeholder state for results (ResultsPanel.tsx)
-- [x] UI Upgrade 5: Balance Monthly Cost card (ResultsPanel.tsx)
-- [x] UI Upgrade 6: Improve header (App.tsx + index.css)
-- [x] UI Upgrade 7: Make "Powered by AI" more visible (DescribeProject.tsx)
+## Visual: Font Size Increases
+- [x] Increase page title, tagline, section headers, subtitles
+- [x] Increase field labels, dropdown text, checkbox labels
+- [x] Increase card titles, card body text, price values
+- [x] Increase tab text, footer text, line-height
+
+## Visual: Color Variety to Cards
+- [x] Change card numbers from orange to zinc-400
+- [x] Build Cost card color adjustments
+- [x] Monthly Cost card color adjustments (green total, dimmed $0)
+- [x] Suggested Architecture card color adjustments (blue stats)
+- [x] CTA section keep orange
