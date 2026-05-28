@@ -141,7 +141,7 @@ function CheckboxGroup({
                 </span>
                 <span className="flex-1">{opt.label}</span>
                 {costSuffix && opt.cost !== undefined && opt.cost > 0 && (
-                  <span className="text-text-muted text-xs font-serif">+${opt.cost}/mo</span>
+                  <span className="text-text-muted text-xs font-serif">+${opt.cost}</span>
                 )}
               </button>
             );

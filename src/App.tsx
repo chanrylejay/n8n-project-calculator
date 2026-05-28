@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Briefcase, Globe, Linkedin, Github, Share2, Check } from "lucide-react";
 import QuickEstimate from "./calculator/QuickEstimate";
 import DescribeProject, { AIEstimateResult } from "./calculator/DescribeProject";
@@ -15,7 +15,6 @@ function App() {
   const [aiLoading, setAiLoading] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -65,12 +64,6 @@ function App() {
     }
   }, [showToast]);
 
-  const handleAIScroll = useCallback(() => {
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
-  }, []);
-
   return (
     <div className="min-h-screen bg-surface-primary text-text-primary">
       {/* Header */}
@@ -78,7 +71,7 @@ function App() {
         <div className="mx-auto max-w-4xl px-6 sm:px-8 py-8 sm:py-10">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-accent font-mono font-bold text-accent text-lg">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-accent font-mono font-bold text-accent text-xl">
                 n8
               </div>
               <h1 className="text-4xl sm:text-5xl font-serif font-bold text-text-primary tracking-tight">
@@ -125,7 +118,7 @@ function App() {
             <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-8 shadow-lg">
               <QuickEstimate formState={formState} onChange={handleFormChange} onShare={handleShare} />
             </div>
-            <div ref={resultsRef}>
+            <div>
               <ResultsPanel result={resultSource} />
             </div>
           </div>
@@ -137,10 +130,9 @@ function App() {
                 onError={handleAIError}
                 isLoading={aiLoading}
                 setIsLoading={setAiLoading}
-                onScrollToResults={handleAIScroll}
               />
             </div>
-            <div ref={resultsRef}>
+            <div>
               <ResultsPanel result={resultSource} error={aiError || undefined} />
             </div>
           </div>

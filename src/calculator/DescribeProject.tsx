@@ -27,7 +27,6 @@ interface DescribeProjectProps {
   onError: (message: string) => void;
   isLoading: boolean;
   setIsLoading: (v: boolean) => void;
-  onScrollToResults: () => void;
 }
 
 const RATE_LIMIT_KEY = "n8n_calc_rate";
@@ -58,7 +57,7 @@ function incrementUsage(): number {
   return next;
 }
 
-export default function DescribeProject({ onResult, onError, isLoading, setIsLoading, onScrollToResults }: DescribeProjectProps) {
+export default function DescribeProject({ onResult, onError, isLoading, setIsLoading }: DescribeProjectProps) {
   const [text, setText] = useState("");
   const [rateLimited, setRateLimited] = useState(false);
 
@@ -104,13 +103,12 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
 
       incrementUsage();
       onResult(parsed);
-      onScrollToResults();
     } catch {
       onError("Something went wrong. Try the Quick Estimate tab for instant results, or try again later.");
     } finally {
       setIsLoading(false);
     }
-  }, [text, onResult, onError, setIsLoading, onScrollToResults]);
+  }, [text, onResult, onError, setIsLoading]);
 
   return (
     <div className="space-y-4">
