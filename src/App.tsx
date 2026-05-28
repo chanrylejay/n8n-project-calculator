@@ -68,17 +68,17 @@ function App() {
     <div className="min-h-screen bg-surface-primary text-text-primary">
       {/* Header */}
       <header className="border-b border-[#2d2c2a] bg-surface-primary/95 backdrop-blur-md sticky top-0 z-10">
-        <div className="mx-auto max-w-4xl px-6 sm:px-8 py-8 sm:py-10">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-accent font-mono font-bold text-accent text-xl">
-                n8
+        <div className="mx-auto max-w-4xl px-6 sm:px-8 py-10 sm:py-14">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-xl border-2 border-accent font-mono font-bold text-accent text-2xl">
+                n8n
               </div>
-              <h1 className="text-4xl sm:text-5xl font-serif font-bold text-text-primary tracking-tight">
+              <h1 className="text-5xl sm:text-6xl font-serif font-bold text-text-primary tracking-tight">
                 Project Calculator
               </h1>
             </div>
-            <p className="text-base text-text-secondary font-serif max-w-xl">
+            <p className="text-lg sm:text-xl text-text-secondary font-serif max-w-2xl">
               Estimate your n8n automation build cost in 30 seconds. Get a realistic breakdown of development fees, hosting, and monthly running costs.
             </p>
           </div>
