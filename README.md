@@ -145,7 +145,7 @@ n8n-project-calculator/
 **Chanryle Jay Cagara** — AI Automation Specialist
 
 - 🌐 https://chanryle-cagara.vercel.app
-- 💼 [Upwork](https://www.upwork.com/freelancers/~01b3e8c5c5c5c5c5c5)
+- 💼 Upwork
 - 🔗 https://linkedin.com/in/chanrylejay
 - 🐙 [GitHub](https://github.com/chanrylejay)
 
