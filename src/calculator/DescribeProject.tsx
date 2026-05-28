@@ -30,7 +30,7 @@ interface DescribeProjectProps {
 }
 
 const RATE_LIMIT_KEY = "n8n_calc_rate";
-const MAX_PER_DAY = 3;
+const MAX_PER_DAY = 10;
 
 function getTodayKey(): string {
   return new Date().toISOString().slice(0, 10);
@@ -72,7 +72,7 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
     const usage = getUsageCount();
     if (usage.count >= MAX_PER_DAY) {
       setRateLimited(true);
-      onError("You've used your 3 free estimates today. Try the Quick Estimate tab for unlimited instant estimates, or come back tomorrow!");
+      onError("You've used your 10 free estimates today. Try the Quick Estimate tab for unlimited instant estimates, or come back tomorrow!");
       return;
     }
 

@@ -32,9 +32,9 @@ function SelectField({
   isPrimary,
 }: {
   label: string;
-  value: number | null;
+  value: number | string | null;
   options: { label: string }[];
-  onChange: (idx: number | null) => void;
+  onChange: (idx: number | string | null) => void;
   note?: string;
   isPrimary?: boolean;
 }) {
@@ -48,7 +48,16 @@ function SelectField({
       <div className="relative">
         <select
           value={value === null ? "" : value}
-          onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val === "") {
+              onChange(null);
+            } else if (val === "none") {
+              onChange("none");
+            } else {
+              onChange(Number(val));
+            }
+          }}
           className={`form-input ${value !== null ? "border-accent/40 bg-[rgba(217,119,87,0.06)]" : ""}`}
         >
           <option value="">Select...</option>
@@ -176,8 +185,8 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
     [formState, set]
   );
 
-  // Show AI provider dropdown only when AI is selected AND it's not "No AI needed" (index 0)
-  const showAIProvider = formState.ai !== null && formState.ai !== 0;
+  // Show AI provider dropdown only when AI is selected AND it's not "No AI needed"
+  const showAIProvider = formState.ai !== null && formState.ai !== "none";
 
   const hostingNote =
     formState.hosting !== null ? HOSTING_OPTIONS[formState.hosting].note : undefined;
@@ -227,8 +236,8 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
             options={AI_OPTIONS}
             onChange={(v) => {
               set("ai", v);
-              // If "No AI needed" (index 0) or reset to null, hide AI provider and reset its value
-              if (v === null || v === 0) {
+              // If "No AI needed" or reset to null, hide AI provider and reset its value
+              if (v === null || v === "none") {
                 set("aiProvider", null);
               }
             }}

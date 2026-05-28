@@ -146,7 +146,7 @@ export interface CustomEntry {
 export interface FormState {
   automation: number | null;
   apps: number | null;
-  ai: number | null;
+  ai: number | "none" | null;
   hosting: number | null;
   frequency: number | null;
   aiProvider: number | null;
@@ -190,12 +190,16 @@ export interface CalculationResult {
   hostingCost: number;
   hostingLabel: string;
   hostingNote?: string;
+  hostingTag?: string;
   aiCost: number;
   aiModelName: string;
+  aiTag?: string;
   databaseCost: number;
   databaseLabel: string;
+  databaseTag?: string;
   notificationCost: number;
   notificationLabel: string;
+  notificationTag?: string;
   toolsCost: number;
   toolsBreakdown: { label: string; cost: number }[];
   totalMonthly: number;
@@ -227,7 +231,7 @@ export function calculate(state: FormState): CalculationResult | null {
   }
 
   let aiLevel: AILevel = "none";
-  if (state.ai !== null) {
+  if (state.ai !== null && state.ai !== "none") {
     const aiOpt = AI_OPTIONS[state.ai];
     aiLevel = aiOpt.aiFlag;
     tier = clampTier(tier + aiOpt.tierBump);
@@ -322,6 +326,28 @@ export function calculate(state: FormState): CalculationResult | null {
     executionsPerMonth = freq.executions === -1 ? "Varies" : freq.executions;
   }
 
+  // Tags for Key Integrations
+  let hostingTag: string | undefined;
+  if (state.hosting !== null) {
+    const hOpt = HOSTING_OPTIONS[state.hosting];
+    hostingTag = isOtherOption(hOpt.cost) ? (state.customHosting.name || undefined) : hOpt.label;
+  }
+  let aiTag: string | undefined;
+  if (aiLevel !== "none" && state.aiProvider !== null) {
+    const provider = AI_PROVIDER_OPTIONS[state.aiProvider];
+    aiTag = isOtherOption(provider.costs[aiLevel]) ? (state.customAI.name || undefined) : provider.label;
+  }
+  let databaseTag: string | undefined;
+  if (state.database !== null) {
+    const dOpt = DATABASE_OPTIONS[state.database];
+    databaseTag = isOtherOption(dOpt.cost) ? (state.customDatabase.name || undefined) : dOpt.label;
+  }
+  let notificationTag: string | undefined;
+  if (state.notification !== null) {
+    const nOpt = NOTIFICATION_OPTIONS[state.notification];
+    notificationTag = isOtherOption(nOpt.cost) ? (state.customNotification.name || undefined) : nOpt.label;
+  }
+
   const totalMonthly = hostingCost + aiCost + databaseCost + notificationCost + toolsCost;
 
   return {
@@ -333,12 +359,16 @@ export function calculate(state: FormState): CalculationResult | null {
     hostingCost,
     hostingLabel,
     hostingNote,
+    hostingTag,
     aiCost,
     aiModelName,
+    aiTag,
     databaseCost,
     databaseLabel,
+    databaseTag,
     notificationCost,
     notificationLabel,
+    notificationTag,
     toolsCost,
     toolsBreakdown,
     totalMonthly,

@@ -1,19 +1,12 @@
-# Task Progress
+# Progress
 
-## Bug Fixes
-- [x] Fix AI dropdown cannot reset to "No AI needed"
-- [x] Fix "Not sure yet" leaking as line item name in Monthly Cost card
-- [x] Fix truncated AI Model text in Architecture card
-
-## Visual: Font Size Increases
-- [x] Increase page title, tagline, section headers, subtitles
-- [x] Increase field labels, dropdown text, checkbox labels
-- [x] Increase card titles, card body text, price values
-- [x] Increase tab text, footer text, line-height
-
-## Visual: Color Variety to Cards
-- [x] Change card numbers from orange to zinc-400
-- [x] Build Cost card color adjustments
-- [x] Monthly Cost card color adjustments (green total, dimmed $0)
-- [x] Suggested Architecture card color adjustments (blue stats)
-- [x] CTA section keep orange
+- [x] Bug 1: Fix "Does it need AI?" dropdown — change "No AI needed" value to "none"
+- [x] Bug 2: Fix Monthly Cost card — show category rows only, combined tools sum
+- [x] Bug 3: Fix Key Integrations tags — show actual tool/service names, filter garbage
+- [x] Bug 4: Fix header tagline — shorter text
+- [x] Visual 1: Fix "Get AI Estimate" button color — #F97316 orange
+- [x] Visual 2: Fix textarea border — default zinc-700, focus #F97316
+- [x] Visual 3: Add card hover effects — translateY(-2px), border-color, shadow
+- [x] Visual 4: Tighten spacing — reduce gaps between sections
+- [x] Visual 5: Make footer CTA clickable — link to Upwork
+- [x] Visual 6: Increase daily AI estimate limit — 3 → 10

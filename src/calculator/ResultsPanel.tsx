@@ -25,7 +25,7 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="group relative rounded-lg border border-[#2d2c2a] bg-surface-card p-6 transition-all duration-150 hover:border-accent/30 hover:shadow-glow">
+    <div className="group relative rounded-lg border border-zinc-800 bg-surface-card p-6 transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:border-zinc-600 hover:shadow-[0_4px_12px_rgba(249,115,22,0.08)]">
       <div className="space-y-4">
         <div className="flex items-start gap-3">
           {number && (
@@ -59,7 +59,7 @@ function formatMoney(n: number): string {
 
 function ResultsCTA() {
   return (
-    <div className="text-center space-y-3 pt-2">
+    <div className="text-center space-y-2 pt-1">
       <div className="h-px bg-zinc-800" />
       <p className="text-sm text-zinc-400" style={{ fontSize: "14px" }}>Ready to build it?</p>
       <p className="text-xs text-zinc-500" style={{ fontSize: "13px" }}>Let's discuss your project and get started.</p>
@@ -163,17 +163,13 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
-              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} valueColor={r.hostingCost === 0 ? "text-zinc-500" : "text-zinc-200"} />
-              <CostLine 
-                label="AI API" 
-                value={`${formatMoney(r.aiCost)}/mo`}
-                valueColor={r.aiCost === 0 ? "text-zinc-500" : "text-zinc-200"}
-              />
-              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} valueColor={r.databaseCost === 0 ? "text-zinc-500" : "text-zinc-200"} />
-              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} valueColor={r.notificationCost === 0 ? "text-zinc-500" : "text-zinc-200"} />
-              {r.toolsBreakdown.map((t, i) => 
-                <CostLine key={i} label={t.label} value={`${formatMoney(t.cost)}/mo`} valueColor={t.cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
+              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} valueColor={r.hostingCost === 0 ? "text-zinc-500" : "text-white"} />
+              {r.aiCost > 0 && (
+                <CostLine label="AI API" value={`${formatMoney(r.aiCost)}/mo`} valueColor="text-white" />
               )}
+              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} valueColor={r.databaseCost === 0 ? "text-zinc-500" : "text-white"} />
+              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} valueColor={r.notificationCost === 0 ? "text-zinc-500" : "text-white"} />
+              <CostLine label="Tools & Services" value={`${formatMoney(r.toolsCost)}/mo`} valueColor={r.toolsCost === 0 ? "text-zinc-500" : "text-white"} />
             </div>
             
             {r.hostingNote && (
@@ -224,22 +220,50 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
             </div>
           </div>
 
-          {(r.databaseLabel || r.notificationLabel || r.toolsBreakdown.length > 0) && (
-            <div className="pt-3 border-t border-[#2d2c2a]">
-              <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 font-mono">Key Integrations</p>
-              <div className="flex flex-wrap gap-2">
-                {r.databaseLabel && r.databaseCost >= 0 && (
-                  <span className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.databaseLabel}</span>
-                )}
-                {r.notificationLabel && (
-                  <span className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.notificationLabel}</span>
-                )}
-                {r.toolsBreakdown.map((t, i) => (
-                  <span key={i} className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{t.label}</span>
-                ))}
+          {(() => {
+            // Collect actual integration names, filtering out garbage
+            const tags: string[] = [];
+            
+            // From hosting: actual hosting option name (not "Not sure yet" or "Already have n8n")
+            if (r.hostingTag && !/^(Not sure|Already have|Select)/i.test(r.hostingTag)) {
+              tags.push(r.hostingTag);
+            }
+            
+            // From AI provider: actual provider name (not "Not sure" or "Select")
+            if (r.aiTag && !/^(Not sure|Already have|Select)/i.test(r.aiTag)) {
+              tags.push(r.aiTag);
+            }
+            
+            // From database: actual database name (not "None needed" or "Already have one")
+            if (r.databaseTag && !/^(None|Already have|Select)/i.test(r.databaseTag)) {
+              tags.push(r.databaseTag);
+            }
+            
+            // From notification: actual channel name (not "None")
+            if (r.notificationTag && !/^(None|Select)/i.test(r.notificationTag)) {
+              tags.push(r.notificationTag);
+            }
+            
+            // From tools: names of checked tools only (not "None of these" or "Other tool")
+            for (const t of r.toolsBreakdown) {
+              if (!/^(None|Other)/i.test(t.label)) {
+                tags.push(t.label);
+              }
+            }
+            
+            if (tags.length === 0) return null;
+            
+            return (
+              <div className="pt-3 border-t border-[#2d2c2a]">
+                <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 font-mono">Key Integrations</p>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag, i) => (
+                    <span key={i} className="rounded-md bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{tag}</span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
       </Card>
 

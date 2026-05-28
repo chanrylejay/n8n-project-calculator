@@ -81,14 +81,14 @@ function App() {
               </h1>
             </div>
             <p className="text-sm sm:text-[18px] text-text-secondary font-serif max-w-xl leading-relaxed">
-              Estimate your n8n automation build cost in 30 seconds. Get a realistic breakdown of development fees, hosting, and monthly running costs.
+              Estimate your n8n automation build cost in 30 seconds — development fees, hosting, and monthly running costs.
             </p>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-4xl px-6 sm:px-8 py-12 sm:py-16 space-y-10">
+      <main className="mx-auto max-w-4xl px-6 sm:px-8 py-10 sm:py-12 space-y-7">
         {/* Tabs */}
         <div className="flex gap-2 bg-surface-card p-1.5 rounded-lg border border-[#2d2c2a]">
           <button
@@ -116,7 +116,7 @@ function App() {
 
         {/* Tab content */}
         {activeTab === "quick" ? (
-          <div className="space-y-10">
+          <div className="space-y-7">
             <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-8 shadow-lg">
               <QuickEstimate formState={formState} onChange={handleFormChange} onShare={handleShare} />
             </div>
@@ -125,7 +125,7 @@ function App() {
             </div>
           </div>
         ) : (
-          <div className="space-y-10">
+          <div className="space-y-7">
             <div className="rounded-lg border border-[#2d2c2a] bg-surface-card p-8 shadow-lg">
               <DescribeProject
                 onResult={handleAIResult}
@@ -145,7 +145,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#2d2c2a] bg-surface-primary/50 backdrop-blur-md mt-20">
+      <footer className="border-t border-[#2d2c2a] bg-surface-primary/50 backdrop-blur-md mt-14">
         <div className="mx-auto max-w-4xl px-6 sm:px-8 py-12">
           <div className="space-y-6">
             <div className="h-px bg-[#2d2c2a]" />
@@ -196,7 +196,15 @@ function App() {
             </div>
             <div className="h-px bg-[#2d2c2a]" />
             <p className="text-sm text-text-muted text-center font-sans">
-              Designed & built by Chanryle. Open to freelance n8n projects.
+              Designed & built by Chanryle.{" "}
+              <a
+                href="https://www.upwork.com/freelancers/~01c62edc2e375ef8ce"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#F97316] hover:underline transition-colors duration-150"
+              >
+                Open to freelance n8n projects.
+              </a>
             </p>
           </div>
         </div>
