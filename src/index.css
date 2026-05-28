@@ -8,6 +8,7 @@
    CSS CUSTOM PROPERTIES (Portfolio Brand)
    ======================================== */
 :root {
+  zoom: 0.8;
   --bg-primary: #141413;
   --bg-secondary: #1c1b1a;
   --bg-card: #232220;
