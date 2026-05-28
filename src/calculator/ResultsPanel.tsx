@@ -126,35 +126,35 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
     <div className="space-y-6 animate-fadeIn">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card 1: Build Cost */}
-        <Card icon={Hammer} title="Build Cost" accent type="success">
+        <Card icon={Hammer} title="Build Cost" number="01">
           <div className="space-y-4">
             <div>
-              <div className="text-sm text-zinc-500 mb-1">Estimated Cost</div>
-              <div className="text-[36px] font-bold text-success tracking-tight">
+              <div className="text-xs text-text-muted mb-2 font-mono uppercase tracking-wider">Estimated Cost</div>
+              <div className="text-4xl font-bold text-accent tracking-tight font-serif">
                 {r.buildMin === r.buildMax
                   ? `${formatMoney(r.buildMin)}`
                   : `${formatMoney(r.buildMin)}–${formatMoney(r.buildMax)}`}
               </div>
-              <div className="text-xs text-zinc-500 mt-1">flat rate</div>
+              <div className="text-xs text-text-muted mt-2 font-serif">flat rate</div>
             </div>
             
             {r.addOnBreakdown.length > 0 && (
-              <div className="space-y-2 pt-2 border-t border-surface-border/50">
-                <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Add-ons Included</div>
+              <div className="space-y-2 pt-3 border-t border-[#2d2c2a]">
+                <div className="text-xs font-bold text-text-secondary uppercase tracking-widest font-mono">Add-ons Included</div>
                 {r.addOnBreakdown.map((a, i) => (
-                  <div key={i} className="flex justify-between text-xs">
-                    <span className="text-zinc-500">{a.label}</span>
-                    <span className="text-zinc-300 font-medium">+${a.cost}</span>
+                  <div key={i} className="flex justify-between text-sm font-serif">
+                    <span className="text-text-secondary">{a.label}</span>
+                    <span className="text-text-primary font-semibold">+${a.cost}</span>
                   </div>
                 ))}
               </div>
             )}
             
-            <div className="space-y-2 pt-2 border-t border-surface-border/50">
+            <div className="space-y-2 pt-3 border-t border-[#2d2c2a]">
               <CostLine label="Delivery timeframe" value={`${r.deliveryMin}–${r.deliveryMax} days`} />
               <div className="flex items-center justify-between">
-                <span className="text-sm text-zinc-500">Complexity</span>
-                <span className="inline-flex items-center rounded-full bg-info/20 px-3 py-1 text-xs font-bold text-info">
+                <span className="text-sm text-text-secondary font-serif">Complexity</span>
+                <span className="inline-flex items-center rounded-full bg-accent/15 border border-accent/30 px-3 py-1 text-xs font-bold text-accent font-mono tracking-wider">
                   TIER {r.tier}
                 </span>
               </div>
@@ -163,7 +163,7 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         </Card>
 
         {/* Card 2: Monthly Running Cost */}
-        <Card icon={Calendar} title="Monthly Cost" accent type="warning">
+        <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
               <CostLine label={r.hostingLabel} value={`${formatMoney(r.hostingCost)}/mo`} />
@@ -176,12 +176,12 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
             </div>
             
             {r.hostingNote && (
-              <div className="pt-2 border-t border-surface-border/50">
-                <p className="text-xs text-info italic">{r.hostingNote}</p>
+              <div className="pt-2 border-t border-[#2d2c2a]">
+                <p className="text-xs text-accent italic font-serif">{r.hostingNote}</p>
               </div>
             )}
             
-            <div className="pt-3 border-t border-surface-border/50">
+            <div className="pt-3 border-t border-[#2d2c2a]">
               <CostLine 
                 label="Total Monthly" 
                 value={`${formatMoney(r.totalMonthly)}/mo`}
@@ -193,50 +193,50 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
       </div>
 
       {/* Card 3: Suggested Architecture — full width */}
-      <Card icon={Layers} title="Suggested Architecture" type="info">
+      <Card icon={Layers} title="Suggested Architecture" number="03">
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Workflows</div>
-              <div className="text-2xl font-bold text-info">
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Workflows</div>
+              <div className="text-2xl font-bold text-accent font-serif">
                 {r.workflowsMin === r.workflowsMax
                   ? r.workflowsMin
                   : `${r.workflowsMin}–${r.workflowsMax}`}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Nodes</div>
-              <div className="text-2xl font-bold text-info">{r.nodesMin}–{r.nodesMax}</div>
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Nodes</div>
+              <div className="text-2xl font-bold text-accent font-serif">{r.nodesMin}–{r.nodesMax}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Executions</div>
-              <div className="text-base font-semibold text-info">
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Executions</div>
+              <div className="text-base font-semibold text-accent font-serif">
                 {typeof r.executionsPerMonth === "number"
                   ? r.executionsPerMonth.toLocaleString()
                   : r.executionsPerMonth}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">AI Model</div>
-              <div className="text-sm font-semibold text-info truncate">{r.aiModelName !== "None" ? r.aiModelName : "—"}</div>
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">AI Model</div>
+              <div className="text-sm font-semibold text-accent truncate font-serif">{r.aiModelName !== "None" ? r.aiModelName : "—"}</div>
             </div>
           </div>
 
           {(r.aiModelName !== "None" || r.databaseLabel || r.notificationLabel || r.toolsBreakdown.length > 0) && (
-            <div className="pt-2 border-t border-surface-border/50">
-              <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Key Integrations</p>
+            <div className="pt-3 border-t border-[#2d2c2a]">
+              <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3 font-mono">Key Integrations</p>
               <div className="flex flex-wrap gap-2">
                 {r.aiModelName !== "None" && (
-                  <span className="rounded-md bg-accent/10 border border-accent/30 px-2.5 py-1 text-xs font-medium text-accent">{r.aiModelName}</span>
+                  <span className="rounded-md bg-accent/15 border border-accent/30 px-2.5 py-1 text-xs font-medium text-accent font-serif">{r.aiModelName}</span>
                 )}
                 {r.databaseLabel && r.databaseCost >= 0 && (
-                  <span className="rounded-md bg-info/10 border border-info/30 px-2.5 py-1 text-xs font-medium text-info">{r.databaseLabel}</span>
+                  <span className="rounded-md bg-accent/10 border border-accent/20 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.databaseLabel}</span>
                 )}
                 {r.notificationLabel && (
-                  <span className="rounded-md bg-success/10 border border-success/30 px-2.5 py-1 text-xs font-medium text-success">{r.notificationLabel}</span>
+                  <span className="rounded-md bg-accent/10 border border-accent/20 px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{r.notificationLabel}</span>
                 )}
                 {r.toolsBreakdown.map((t, i) => (
-                  <span key={i} className="rounded-md bg-zinc-800/50 border border-surface-border px-2.5 py-1 text-xs font-medium text-zinc-400">{t.label}</span>
+                  <span key={i} className="rounded-md bg-[#2d2c2a] border border-[#3e3d3a] px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">{t.label}</span>
                 ))}
               </div>
             </div>
@@ -256,21 +256,22 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
     <div className="space-y-6 animate-fadeIn">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card 1: Build Cost */}
-        <Card icon={Hammer} title="Build Cost" accent type="success">
+        <Card icon={Hammer} title="Build Cost" number="01">
           <div className="space-y-4">
             <div>
-              <div className="text-sm text-zinc-500 mb-1">Estimated Cost</div>
-              <div className="text-[36px] font-bold text-success tracking-tight">
+              <div className="text-xs text-text-muted mb-2 font-mono uppercase tracking-wider">Estimated Cost</div>
+              <div className="text-4xl font-bold text-accent tracking-tight font-serif">
                 {d.build_cost_min === d.build_cost_max
                   ? `${formatMoney(d.build_cost_min)}`
                   : `${formatMoney(d.build_cost_min)}–${formatMoney(d.build_cost_max)}`}
               </div>
+              <div className="text-xs text-text-muted mt-2 font-serif">flat rate</div>
             </div>
-            <div className="space-y-2 pt-3 border-t border-surface-border/50">
+            <div className="space-y-2 pt-3 border-t border-[#2d2c2a]">
               <CostLine label="Delivery timeframe" value={`${d.delivery_days_min}–${d.delivery_days_max} days`} />
               <div className="flex items-center justify-between">
-                <span className="text-sm text-zinc-500">Complexity</span>
-                <span className="inline-flex items-center rounded-full bg-info/20 px-3 py-1 text-xs font-bold text-info">
+                <span className="text-sm text-text-secondary font-serif">Complexity</span>
+                <span className="inline-flex items-center rounded-full bg-accent/15 border border-accent/30 px-3 py-1 text-xs font-bold text-accent font-mono tracking-wider">
                   TIER {d.complexity_tier}
                 </span>
               </div>
@@ -278,7 +279,7 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
             {d.key_integrations.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-2">
                 {d.key_integrations.map((app, i) => (
-                  <span key={i} className="rounded-md bg-zinc-800/50 border border-surface-border px-2 py-0.5 text-xs font-medium text-zinc-400">
+                  <span key={i} className="rounded-md bg-[#2d2c2a] border border-[#3e3d3a] px-2.5 py-1 text-xs font-medium text-text-secondary font-serif">
                     {app}
                   </span>
                 ))}
@@ -288,7 +289,7 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
         </Card>
 
         {/* Card 2: Monthly Running Cost */}
-        <Card icon={Calendar} title="Monthly Cost" accent type="warning">
+        <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
               <CostLine label="Hosting" value={`${formatMoney(d.monthly_hosting_cost)}/mo`} />
@@ -296,7 +297,7 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
               <CostLine label="Database" value={`${formatMoney(d.monthly_db_cost)}/mo`} />
               <CostLine label="Tools & Services" value={`${formatMoney(d.monthly_tools_cost)}/mo`} />
             </div>
-            <div className="pt-3 border-t border-surface-border/50">
+            <div className="pt-3 border-t border-[#2d2c2a]">
               <CostLine 
                 label="Total Monthly" 
                 value={`${formatMoney(d.monthly_total)}/mo`}
@@ -308,34 +309,34 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
       </div>
 
       {/* Card 3: Suggested Architecture — full width */}
-      <Card icon={Layers} title="Suggested Architecture" type="info">
+      <Card icon={Layers} title="Suggested Architecture" number="03">
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Workflows</div>
-              <div className="text-2xl font-bold text-info">{d.workflows_needed}</div>
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Workflows</div>
+              <div className="text-2xl font-bold text-accent font-serif">{d.workflows_needed}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">Nodes</div>
-              <div className="text-2xl font-bold text-info">{d.estimated_nodes_min}–{d.estimated_nodes_max}</div>
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">Nodes</div>
+              <div className="text-2xl font-bold text-accent font-serif">{d.estimated_nodes_min}–{d.estimated_nodes_max}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-zinc-500 uppercase font-semibold tracking-wider">AI Model</div>
-              <div className="text-sm font-semibold text-info truncate">{d.ai_model_recommended ?? "None"}</div>
+              <div className="text-xs text-text-muted uppercase font-semibold tracking-widest font-mono">AI Model</div>
+              <div className="text-sm font-semibold text-accent truncate font-serif">{d.ai_model_recommended ?? "None"}</div>
             </div>
           </div>
 
           {d.architecture_summary && (
-            <div className="pt-3 border-t border-surface-border/50">
-              <p className="text-sm text-zinc-400 leading-relaxed">{d.architecture_summary}</p>
+            <div className="pt-3 border-t border-[#2d2c2a]">
+              <p className="text-sm text-text-secondary font-serif leading-relaxed">{d.architecture_summary}</p>
             </div>
           )}
         </div>
       </Card>
 
       {d.notes && (
-        <div className="rounded-lg border border-info/30 bg-info/5 px-5 py-4">
-          <p className="text-sm text-zinc-400 italic leading-relaxed">{d.notes}</p>
+        <div className="rounded-lg border border-accent/20 bg-accent/5 px-5 py-4">
+          <p className="text-sm text-text-secondary italic font-serif leading-relaxed">{d.notes}</p>
         </div>
       )}
 

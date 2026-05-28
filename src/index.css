@@ -83,14 +83,14 @@ input[type="number"] {
    ======================================== */
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2.5 rounded-lg bg-[#d97757] px-6 py-3 text-sm font-600 text-[#faf9f5] shadow-glow;
+    @apply inline-flex items-center justify-center gap-2.5 rounded-lg bg-[#d97757] px-6 py-3 text-sm font-semibold text-[#faf9f5] shadow-glow;
     font-family: 'Poppins', sans-serif;
     @apply transition-all duration-150 hover:bg-[#e59373] hover:shadow-lg hover:shadow-[rgba(217,119,87,0.25)] active:scale-95;
     @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-[#2d2c2a] bg-[#1a1918] px-4 py-3 text-sm font-500 text-[#c5c4be];
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-[#2d2c2a] bg-[#1a1918] px-4 py-3 text-sm font-medium text-[#c5c4be];
     font-family: 'Poppins', sans-serif;
     @apply transition-all duration-150 hover:border-[#d97757] hover:text-[#d97757] hover:bg-[rgba(217,119,87,0.06)];
   }
