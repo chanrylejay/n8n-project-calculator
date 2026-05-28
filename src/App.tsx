@@ -16,16 +16,36 @@ function App() {
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
+  const showToast = useCallback((message: string) => {
+    setToastMessage(message);
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 3000);
+  }, []);
+
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail === "describe") setActiveTab("describe");
     };
     window.addEventListener("switchTab", handler);
-    return () => window.removeEventListener("switchTab", handler);
-  }, []);
+
+    const toastHandler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (typeof detail === "string") {
+        showToast(detail);
+      }
+    };
+    window.addEventListener("showToast", toastHandler);
+
+    return () => {
+      window.removeEventListener("switchTab", handler);
+      window.removeEventListener("showToast", toastHandler);
+    };
+  }, [showToast]);
+
 
   const quickResult = calculate(formState);
+
 
   const resultSource: ResultSource = activeTab === "quick"
     ? quickResult
@@ -44,18 +64,19 @@ function App() {
     setAiError(msg);
   }, []);
 
+  const handleClearAIResult = useCallback(() => {
+    setAiResult(null);
+    setAiError("");
+  }, []);
+
   const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab);
     setAiError("");
   }, []);
 
-  const showToast = useCallback((message: string) => {
-    setToastMessage(message);
-    setToastVisible(true);
-    setTimeout(() => setToastVisible(false), 3000);
-  }, []);
 
   const handleShare = useCallback(async () => {
+
     try {
       await navigator.clipboard.writeText(window.location.href);
       showToast("Link copied! Share it with your team.");
@@ -130,9 +151,11 @@ function App() {
               <DescribeProject
                 onResult={handleAIResult}
                 onError={handleAIError}
+                onClearResult={handleClearAIResult}
                 isLoading={aiLoading}
                 setIsLoading={setAiLoading}
               />
+
             </div>
             {/* Only show results when there's an AI result or error */}
             {(aiResult || aiError) && (
@@ -145,8 +168,9 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#2d2c2a] bg-surface-primary/50 backdrop-blur-md mt-14">
-        <div className="mx-auto max-w-4xl px-6 sm:px-8 py-12">
+      <footer className="border-t border-[#2d2c2a] bg-surface-primary/50 backdrop-blur-md mt-6">
+        <div className="mx-auto max-w-4xl px-6 sm:px-8 py-8">
+
           <div className="space-y-6">
             <div className="h-px bg-[#2d2c2a]" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -213,14 +237,14 @@ function App() {
       {/* Toast notification */}
       <div
         className={`fixed bottom-6 right-6 z-50 transition-all duration-300 font-sans ${
-          toastVisible ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+          toastVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="flex items-center gap-3 rounded-lg bg-accent text-[#faf9f5] border border-accent/40 shadow-glow px-5 py-3 text-sm font-500">
-          <Check className="h-5 w-5" />
+        <div className="rounded-lg bg-zinc-800 px-5 py-3 text-sm text-zinc-200 shadow-lg">
           {toastMessage}
         </div>
       </div>
+
     </div>
   );
 }

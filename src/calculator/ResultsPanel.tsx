@@ -1,4 +1,5 @@
-import { Hammer, Calendar, Layers, Info, ExternalLink, TrendingUp } from "lucide-react";
+import { Hammer, Calendar, Layers, Info, ExternalLink, TrendingUp, Share2 } from "lucide-react";
+
 import { CalculationResult } from "./logic";
 import { AIEstimateResult } from "./DescribeProject";
 
@@ -42,14 +43,21 @@ function Card({
   );
 }
 
-function CostLine({ label, value, highlight, valueColor }: { label: string; value: string; highlight?: boolean; valueColor?: string }) {
+function CostLine({ label, value, highlight, valueColor, isZero }: { label: string; value: string; highlight?: boolean; valueColor?: string; isZero?: boolean }) {
   return (
     <div className={`flex items-center justify-between text-base font-serif ${highlight ? "py-1" : ""}`}>
-      <span className={highlight ? "font-semibold text-zinc-200" : "text-text-secondary"}>{label}</span>
-      <span className={valueColor || (highlight ? "font-bold text-[#22C55E]" : "text-text-secondary")}>{value}</span>
+      <span className={
+        highlight ? "font-semibold text-zinc-200" : 
+        isZero ? "text-zinc-600" : "text-zinc-300"
+      }>{label}</span>
+      <span className={
+        valueColor || (highlight ? "font-bold text-[#22C55E]" : 
+        isZero ? "text-zinc-600" : "text-zinc-100 font-semibold")
+      }>{value}</span>
     </div>
   );
 }
+
 
 function formatMoney(n: number): string {
   if (n === 0) return "$0";
@@ -121,7 +129,25 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex items-center justify-end">
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText("https://n8n-project-calculator.vercel.app/");
+              // Dispatch custom event for toast
+              window.dispatchEvent(new CustomEvent("showToast", { detail: "Link copied! Share it with your team ✅" }));
+            } catch {
+              window.dispatchEvent(new CustomEvent("showToast", { detail: "Could not copy link — try manually." }));
+            }
+          }}
+          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-4 py-1.5 text-[13px] text-zinc-300 transition-all duration-150 hover:border-zinc-600 hover:bg-zinc-700 hover:text-zinc-200"
+        >
+          <Share2 className="h-3.5 w-3.5" />
+          Share
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
         {/* Card 1: Build Cost */}
         <Card icon={Hammer} title="Build Cost" number="01">
           <div className="space-y-4">
@@ -163,13 +189,13 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
-              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} valueColor={r.hostingCost === 0 ? "text-zinc-500" : "text-white"} />
+              <CostLine label={r.hostingLabel || "Hosting"} value={`${formatMoney(r.hostingCost)}/mo`} isZero={r.hostingCost === 0} />
               {r.aiCost > 0 && (
-                <CostLine label="AI API" value={`${formatMoney(r.aiCost)}/mo`} valueColor="text-white" />
+                <CostLine label="AI API" value={`${formatMoney(r.aiCost)}/mo`} />
               )}
-              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} valueColor={r.databaseCost === 0 ? "text-zinc-500" : "text-white"} />
-              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} valueColor={r.notificationCost === 0 ? "text-zinc-500" : "text-white"} />
-              <CostLine label="Tools & Services" value={`${formatMoney(r.toolsCost)}/mo`} valueColor={r.toolsCost === 0 ? "text-zinc-500" : "text-white"} />
+              <CostLine label={r.databaseLabel || "Database"} value={`${formatMoney(r.databaseCost)}/mo`} isZero={r.databaseCost === 0} />
+              <CostLine label={r.notificationLabel || "Notifications"} value={`${formatMoney(r.notificationCost)}/mo`} isZero={r.notificationCost === 0} />
+              <CostLine label="Tools & Services" value={`${formatMoney(r.toolsCost)}/mo`} isZero={r.toolsCost === 0} />
             </div>
             
             {r.hostingNote && (
@@ -189,6 +215,7 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
         </Card>
 
       </div>
+
 
       {/* Card 3: Suggested Architecture — full width */}
       <Card icon={Layers} title="Suggested Architecture" number="03">
@@ -277,7 +304,24 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex items-center justify-end">
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText("https://n8n-project-calculator.vercel.app/");
+              window.dispatchEvent(new CustomEvent("showToast", { detail: "Link copied! Share it with your team ✅" }));
+            } catch {
+              window.dispatchEvent(new CustomEvent("showToast", { detail: "Could not copy link — try manually." }));
+            }
+          }}
+          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800 px-4 py-1.5 text-[13px] text-zinc-300 transition-all duration-150 hover:border-zinc-600 hover:bg-zinc-700 hover:text-zinc-200"
+        >
+          <Share2 className="h-3.5 w-3.5" />
+          Share
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
         {/* Card 1: Build Cost */}
         <Card icon={Hammer} title="Build Cost" number="01">
           <div className="space-y-4">
@@ -315,10 +359,10 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
         <Card icon={Calendar} title="Monthly Cost" number="02">
           <div className="space-y-4">
             <div className="space-y-2">
-              <CostLine label="Hosting" value={`${formatMoney(d.monthly_hosting_cost)}/mo`} valueColor={d.monthly_hosting_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
-              <CostLine label="AI API" value={`${formatMoney(d.monthly_ai_cost)}/mo`} valueColor={d.monthly_ai_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
-              <CostLine label="Database" value={`${formatMoney(d.monthly_db_cost)}/mo`} valueColor={d.monthly_db_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
-              <CostLine label="Tools & Services" value={`${formatMoney(d.monthly_tools_cost)}/mo`} valueColor={d.monthly_tools_cost === 0 ? "text-zinc-500" : "text-zinc-200"} />
+              <CostLine label="Hosting" value={`${formatMoney(d.monthly_hosting_cost)}/mo`} isZero={d.monthly_hosting_cost === 0} />
+              <CostLine label="AI API" value={`${formatMoney(d.monthly_ai_cost)}/mo`} isZero={d.monthly_ai_cost === 0} />
+              <CostLine label="Database" value={`${formatMoney(d.monthly_db_cost)}/mo`} isZero={d.monthly_db_cost === 0} />
+              <CostLine label="Tools & Services" value={`${formatMoney(d.monthly_tools_cost)}/mo`} isZero={d.monthly_tools_cost === 0} />
             </div>
             <div className="pt-3 border-t border-[#2d2c2a]">
               <CostLine 
@@ -330,6 +374,7 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
           </div>
         </Card>
       </div>
+
 
       {/* Card 3: Suggested Architecture — full width */}
       <Card icon={Layers} title="Suggested Architecture" number="03">

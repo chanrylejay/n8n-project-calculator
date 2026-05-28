@@ -355,21 +355,24 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
             onToggle={(i) => toggleArrayItem("addons", i)}
             costSuffix
           />
+
+          <button
+            type="button"
+            onClick={handleReset}
+            className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors duration-150 font-sans"
+            style={{ fontSize: "14px", marginTop: "16px" }}
+          >
+            ↺ Reset all
+          </button>
         </div>
       </div>
 
       <div className="h-px bg-border-color" />
 
       {/* Action Buttons */}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors duration-150 font-sans"
-          >
-            Reset all
-          </button>
           <button
             type="button"
             onClick={onShare}
@@ -395,6 +398,7 @@ export default function QuickEstimate({ formState, onChange, onShare }: QuickEst
           </button>
         </p>
       </div>
+
     </div>
   );
 }

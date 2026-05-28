@@ -25,9 +25,11 @@ export interface AIEstimateResult {
 interface DescribeProjectProps {
   onResult: (result: AIEstimateResult) => void;
   onError: (message: string) => void;
+  onClearResult: () => void;
   isLoading: boolean;
   setIsLoading: (v: boolean) => void;
 }
+
 
 const RATE_LIMIT_KEY = "n8n_calc_rate";
 const MAX_PER_DAY = 10;
@@ -57,9 +59,11 @@ function incrementUsage(): number {
   return next;
 }
 
-export default function DescribeProject({ onResult, onError, isLoading, setIsLoading }: DescribeProjectProps) {
+export default function DescribeProject({ onResult, onError, onClearResult, isLoading, setIsLoading }: DescribeProjectProps) {
+
   const [text, setText] = useState("");
   const [rateLimited, setRateLimited] = useState(false);
+  const [hasResult, setHasResult] = useState(false);
 
   const remaining = MAX_PER_DAY - getUsageCount().count;
 
@@ -102,6 +106,7 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
       }
 
       incrementUsage();
+      setHasResult(true);
       onResult(parsed);
     } catch {
       onError("Something went wrong. Try the Quick Estimate tab for instant results, or try again later.");
@@ -109,6 +114,15 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
       setIsLoading(false);
     }
   }, [text, onResult, onError, setIsLoading]);
+
+  const handleNewEstimate = useCallback(() => {
+    setText("");
+    setHasResult(false);
+    onError("");
+    onClearResult();
+    // We do NOT reset the daily estimate counter
+  }, [onError, onClearResult]);
+
 
   return (
     <div className="space-y-4">
@@ -133,27 +147,41 @@ export default function DescribeProject({ onResult, onError, isLoading, setIsLoa
 
       </div>
 
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={isLoading || rateLimited || !text.trim()}
-        className="btn-primary w-full"
-      >
-        {isLoading ? (
-          <>
-            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            <span>Analyzing your project...</span>
-          </>
-        ) : (
-          <>
-            <Sparkles className="h-5 w-5" />
-            <span>Get AI Estimate</span>
-          </>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isLoading || rateLimited || !text.trim()}
+          className="btn-primary flex-1"
+        >
+          {isLoading ? (
+            <>
+              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <span>Analyzing your project...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-5 w-5" />
+              <span>Get AI Estimate</span>
+            </>
+          )}
+        </button>
+        {hasResult && (
+          <button
+            type="button"
+            onClick={handleNewEstimate}
+            className="rounded-lg border border-zinc-700 bg-transparent px-5 py-3 text-sm text-zinc-300 transition-all duration-150 hover:border-zinc-600 hover:text-zinc-200"
+            style={{ padding: "8px 20px" }}
+          >
+            ✨ New Estimate
+          </button>
         )}
-      </button>
+      </div>
     </div>
   );
 }
+
+

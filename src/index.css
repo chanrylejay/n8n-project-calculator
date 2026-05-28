@@ -59,7 +59,9 @@ body {
   @apply w-full rounded-lg border border-zinc-700 bg-[#1a1918] px-4 py-3 text-[16px] text-[#faf9f5] placeholder-[#9e9d97];
   @apply transition-[border-color] duration-200 ease-in-out hover:border-[#3e3d3a] focus:border-[#F97316] focus:outline-none focus:ring-1 focus:ring-[rgba(249,115,22,0.3)];
   font-family: 'Lora', serif;
+  transition: border-color 0.2s ease;
 }
+
 
 .form-input:disabled {
   @apply opacity-60 cursor-not-allowed;
@@ -87,7 +89,8 @@ input[type="number"] {
     @apply inline-flex items-center justify-center gap-2.5 rounded-lg bg-[#F97316] px-6 py-3 text-sm font-semibold text-white shadow-glow;
     font-family: 'Poppins', sans-serif;
     @apply transition-all duration-150 hover:bg-[#FB923C] hover:shadow-lg hover:shadow-[rgba(249,115,22,0.25)] active:scale-95;
-    @apply disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:shadow-none;
+    @apply disabled:bg-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-none;
+
   }
 
   .btn-secondary {
