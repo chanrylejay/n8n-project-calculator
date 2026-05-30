@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { Briefcase, Globe, Linkedin, Github, Share2, Check } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 import QuickEstimate from "./calculator/QuickEstimate";
 import DescribeProject, { AIEstimateResult } from "./calculator/DescribeProject";
 import ResultsPanel, { ResultSource } from "./calculator/ResultsPanel";
@@ -245,6 +245,8 @@ function App() {
         </div>
       </div>
 
+      {/* Vercel Analytics */}
+      <Analytics />
     </div>
   );
 }
