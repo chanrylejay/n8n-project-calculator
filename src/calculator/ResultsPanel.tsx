@@ -158,7 +158,7 @@ export default function ResultsPanel({ result, error }: ResultsPanelProps) {
                   ? `${formatMoney(r.buildMin)}`
                   : `${formatMoney(r.buildMin)}–${formatMoney(r.buildMax)}`}
               </div>
-              <div className="text-sm text-zinc-500 mt-2 font-serif">flat rate</div>
+              <div className="text-sm text-zinc-500 mt-2 font-serif">flat rate · sample starter pricing</div>
             </div>
             
             {r.addOnBreakdown.length > 0 && (
@@ -332,7 +332,7 @@ function AIResultsPanel({ data }: { data: AIEstimateResult }) {
                   ? `${formatMoney(d.build_cost_min)}`
                   : `${formatMoney(d.build_cost_min)}–${formatMoney(d.build_cost_max)}`}
               </div>
-              <div className="text-sm text-zinc-500 mt-2 font-serif">flat rate</div>
+              <div className="text-sm text-zinc-500 mt-2 font-serif">flat rate · sample starter pricing</div>
             </div>
             <div className="space-y-2 pt-3 border-t border-[#2d2c2a]">
               <CostLine label="Delivery timeframe" value={`${d.delivery_days_min}–${d.delivery_days_max} days`} valueColor="text-zinc-200" />
