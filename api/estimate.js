@@ -66,7 +66,7 @@ Return ONLY the JSON object. No markdown, no explanation, no code fences.`;
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: 'deepseek-v4-flash',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: description }
